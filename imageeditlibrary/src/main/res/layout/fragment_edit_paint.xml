@@ -1,0 +1,86 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:scrollbars="vertical">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="画笔大小"
+        android:textColor="@color/white"/>
+    <SeekBar
+        android:layout_marginTop="@dimen/dp_10"
+        android:id="@+id/paint_value_bar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:max="100"
+        android:maxHeight="2dp"
+        android:progressDrawable="@drawable/seek_bar_bg"
+        android:thumb="@drawable/seek_bar_thumb" />
+        <RelativeLayout
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/dp_10"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画笔颜色"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:foreground="@drawable/ripple_foreground"
+                android:background="@drawable/button_drawable"
+                android:id="@+id/paint_cancel"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:gravity="center"
+                android:text="取消画笔"
+                android:textColor="#01A6FF" />
+        </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.xinlan.imageeditlibrary.editimage.view.PaintModeView
+            android:id="@+id/paint_thumb"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/paint_color_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:overScrollMode="never"
+            android:layout_weight="1"
+            android:scrollbars="none" />
+        <ImageView
+            android:id="@+id/paint_eraser"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:src="@drawable/eraser_normal" />
+    </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

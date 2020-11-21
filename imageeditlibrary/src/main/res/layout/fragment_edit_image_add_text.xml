@@ -1,0 +1,326 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/ed_search_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_drawable"
+            android:foreground="@drawable/ripple_foreground"
+            android:gravity="left|center_vertical"
+            android:hint="添加文字"
+            android:imeOptions="actionSearch"
+            android:lines="1"
+            android:maxLength="50"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:singleLine="true"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_baseline_edit_24"
+            app:tint="@color/gray_cc" />
+
+        <ImageView
+            android:id="@+id/iv_del_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="10dp"
+            android:padding="4dp"
+            android:src="@drawable/icon_del_content"
+            android:visibility="gone"
+            app:tint="@color/gray_cc" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/gentle_typeface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_horizontal"
+        android:text="生成字体预览图"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_data"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:gravity="left|center_vertical"
+        android:text="测测试测试测试测试测试试"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_data"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="15dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/line_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:padding="4dp"
+            android:src="@drawable/white_add"
+            app:tint="@color/gray_cc" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:gravity="center_horizontal"
+            android:text="添加一些自己的文字"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_text_style"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_type_face"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_typeface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="6dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <SeekBar
+            android:id="@+id/seekbar_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:max="100"
+            android:maxHeight="10dp"
+            android:progress="10"
+            android:progressDrawable="@drawable/seek_bar_bg"
+            android:thumb="@mipmap/thumb" />
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="25"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/line_colors"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_colors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="6dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_clarity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:text="透明度"
+            android:textColor="@color/white" />
+
+        <SeekBar
+            android:id="@+id/clarity_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:max="100"
+            android:maxHeight="10dp"
+            android:progress="10"
+            android:progressDrawable="@drawable/seek_bar_bg"
+            android:thumb="@mipmap/thumb" />
+
+        <TextView
+            android:id="@+id/tv_clarity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:text="25"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_attr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="粗体/斜体"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/iv_bold"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/button_drawable"
+                android:foreground="@drawable/ripple_foreground"
+                android:padding="10dp"
+                android:src="@drawable/icon_bold"
+                app:tint="@color/gray_cc" />
+
+            <ImageView
+                android:id="@+id/iv_em"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/button_drawable"
+                android:foreground="@drawable/ripple_foreground"
+                android:padding="13dp"
+                android:src="@drawable/icon_em"
+                app:tint="@color/gray_cc" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="字间距"
+                android:textColor="@color/white" />
+
+            <SeekBar
+                android:id="@+id/space_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:max="15"
+                android:maxHeight="10dp"
+                android:progress="2"
+                android:progressDrawable="@drawable/seek_bar_bg"
+                android:thumb="@mipmap/thumb" />
+
+            <TextView
+                android:id="@+id/tv_size_space"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_10"
+                android:text="0.5"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

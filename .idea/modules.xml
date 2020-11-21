@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ZLWork.iml" filepath="$PROJECT_DIR$/ZLWork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageeditlibrary/imageeditlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageeditlibrary/imageeditlibrary.iml" group="logo-designer/imageeditlibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/logo-designer.iml" filepath="$PROJECT_DIR$/.idea/modules/logo-designer.iml" group="logo-designer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/logo-designer-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/logo-designer-app.iml" group="logo-designer/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageeditlibrary/logo-designer-imageeditlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageeditlibrary/logo-designer-imageeditlibrary.iml" group="logo-designer/imageeditlibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/poster.iml" filepath="$PROJECT_DIR$/.idea/modules/poster.iml" group="poster" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/poster-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/poster-app.iml" group="poster/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageeditlibrary/poster-imageeditlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageeditlibrary/poster-imageeditlibrary.iml" group="poster/imageeditlibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/xiangmu-logo-designer.iml" filepath="$PROJECT_DIR$/.idea/modules/xiangmu-logo-designer.iml" group="logo-designer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/xiangmu-logo-designer-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/xiangmu-logo-designer-app.iml" group="logo-designer/app" />
+    </modules>
+  </component>
+</project>

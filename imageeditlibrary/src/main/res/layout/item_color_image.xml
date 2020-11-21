@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp">
+
+    <com.qmuiteam.qmui.alpha.QMUIAlphaFrameLayout
+        android:id="@+id/color_frame"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:qmui_radius="@dimen/dp_10">
+
+        <RelativeLayout
+            android:id="@+id/relative_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_blue_radiu"
+            android:visibility="gone" />
+    </com.qmuiteam.qmui.alpha.QMUIAlphaFrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_default"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:background="@drawable/border_black"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_lucency" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_add"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:background="@drawable/border_black"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/white_add" />
+    </RelativeLayout>
+
+</LinearLayout>

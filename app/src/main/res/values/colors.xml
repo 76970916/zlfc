@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="line_bg">#e5e5e5</color>
+    <color name="third_party_text_color">#999999</color>
+    <color name="red_btn_disable">#ffcdcdcd</color>
+    <color name="red_btn_normal">#ffed7171</color>
+    <color name="red_btn_pressed">#ffbc0404</color>
+    <color name="tab_text_color_normal">#A7A7A7</color>
+    <color name="tab_text_color_selected">#009e8f</color>
+    <color name="text_error_color">#7f000000</color>
+    <color name="app_def">#4AA6E7</color>
+    <color name="whitefa">#FFFFFF</color>
+    <color name="main_backgroud">#333333</color>
+    <color name="theme_color_primary">#4AA6E7</color>
+    <color name="theme_color_primary_dark">#4AA6E7</color>
+    <color name="theme_color_primary_trans">#4AA6E7</color>
+    <color name="theme_color_secondary">#4AA6E7</color>
+    <color name="theme_color_appdef">#4AA6E7</color>
+
+    <!-- theme color -->
+    <color name="pink">#fb7299</color>
+    <color name="pink_dark">#b85671</color>
+    <color name="pink_trans">#99f0486c</color>
+    <color name="pink_backup">#fb7299</color>
+
+    <color name="purple">#673AB7</color>
+    <color name="purple_dark">#311B92</color>
+    <color name="purple_trans">#99673AB7</color>
+    <color name="purple_backup">#673AB7</color>
+
+    <color name="green">#4CAF50</color>
+    <color name="green_dark">#2E7D32</color>
+    <color name="green_trans">#994CAF50</color>
+    <color name="green_backup">#4CAF50</color>
+
+    <color name="green_light">#8BC34A</color>
+    <color name="green_light_dark">#558B2F</color>
+    <color name="green_light_trans">#998BC34A</color>
+    <color name="green_light_backup">#8BC34A</color>
+
+    <color name="yellow">#B0E0E6</color>
+    <color name="yellow_dark">#B0E0E6</color>
+    <color name="yellow_trans">#B0E0E6</color>
+    <color name="yellow_backup">#B0E0E6</color>
+
+    <color name="orange1">#FF9800</color>
+    <color name="orange_dark">#EF6C00</color>
+    <color name="orange_trans">#99FF9800</color>
+    <color name="orange_backup">#FF9800</color>
+
+    <color name="red1">#F44336</color>
+    <color name="red_dark">#C62828</color>
+    <color name="red_trans">#99F44336</color>
+    <color name="red_backup">#F44336</color>
+
+    <color name="design_back_color">#ECEEF1</color>
+    <color name="bill_fg_bg">#EDF0F2</color>
+    <color name="text_bg_color">#00C4CC</color>
+    <color name="layout_bg">#F7F7F7</color>
+    <color name="text_bg">#CBCBCB</color>
+</resources>

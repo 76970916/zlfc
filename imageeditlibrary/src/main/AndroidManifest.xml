@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xinlan.imageeditlibrary">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application>
+        <!--图片编辑Activity-->
+        <activity
+            android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppThemeQmui"
+            android:windowSoftInputMode="stateUnspecified|adjustPan" />
+        <activity
+            android:name="com.xinlan.imageeditlibrary.editimage.activity.ImagePreviewActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".editimage.activity.CropActivity" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".editimage.activity.CanvasLargerActivity" />
+    </application>
+</manifest>

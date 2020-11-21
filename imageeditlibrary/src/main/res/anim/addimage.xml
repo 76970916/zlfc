@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText">
+    android:fromDegrees="0"
+    android:interpolator="@android:anim/linear_interpolator"//设置转动速率，这里设置的是匀速转动
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toDegrees="90"
+    android:duration = "500"
+    android:visible = "true">
+</rotate>

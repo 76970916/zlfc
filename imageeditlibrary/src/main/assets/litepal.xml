@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<litepal>
+
+    <dbname value="LogoEdit" />
+    <version value="1" />
+
+    <list>
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.LogoBean"></mapping>
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.ImageData"></mapping>
+        <!--字体存储-->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.TypeFace" />
+        <!-- 颜色存储 -->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.TextColor" />
+        <!-- 素材图片存储 -->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.ImageLogo" />
+        <!-- logo 模板 -->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.LogoTemplate" />
+        <!-- logo 图片 -->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.ImageResult" />
+        <!-- 主logo  -->
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.MainLogoBean" />
+    </list>
+</litepal>

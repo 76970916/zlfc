@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="测试"
+        android:textColor="@color/gray_cc"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="left"
+        android:layout_weight="1"
+        android:paddingLeft="15dp"
+        android:paddingTop="4dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="@dimen/dp_4"
+        android:scaleType="fitStart"
+        android:src="@drawable/sel" />
+
+    <ImageView
+        android:id="@+id/iv_check"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:padding="4dp"
+        android:src="@drawable/ic_baseline_check_24"
+        android:visibility="invisible"
+        app:tint="@color/text_bg_color" />
+
+    <com.xinlan.imageeditlibrary.editimage.ui.CircleProgressBar
+        android:id="@+id/item_progress"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="2dp"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:defaultColor="#D8D8D8"
+        app:defaultHeight="3dp"
+        app:radius="15dp"
+        app:reachedColor="#00C4CC"
+        app:reachedHeight="3dp" />
+
+</LinearLayout>

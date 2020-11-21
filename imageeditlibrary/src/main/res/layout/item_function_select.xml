@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+ <RelativeLayout
+     android:id="@+id/relative_clck"
+     android:background="@color/blue"
+     android:layout_width="70dp"
+     android:layout_height="70dp">
+     <ImageView
+         android:src="@drawable/wenzi"
+         android:id="@+id/image_list"
+         android:layout_centerInParent="true"
+         android:layout_width="25dp"
+         android:layout_height="25dp">
+     </ImageView>
+ </RelativeLayout>
+    <TextView
+        android:textColor="@color/white"
+        android:id="@+id/image_text"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="文字"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content">
+    </TextView>
+    </LinearLayout>
+    <RelativeLayout
+        android:background="@color/transparent_easy_photos"
+        android:layout_width="@dimen/dp_10"
+        android:layout_height="70dp">
+    </RelativeLayout>
+</LinearLayout>

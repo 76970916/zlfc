@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp_4"
+    android:layout_marginRight="6dp"
+    android:background="@drawable/item_design"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/iv_oper"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right"
+        android:background="?attr/selectableItemBackground"
+        android:padding="5dp"
+        android:src="@drawable/item_menu" />
+
+    <FrameLayout
+        android:id="@+id/frame_space"
+        android:layout_width="160dp"
+        android:layout_height="200dp"
+        android:clickable="false"
+        android:focusable="false">
+
+        <ImageView
+            android:id="@+id/image_space"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/logo_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="未命名作品" />
+
+
+</LinearLayout>

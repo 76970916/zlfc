@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+
+android {
+    // 线下调试
+    signingConfigs {
+        release {
+            storeFile file { "zlfc.jks" }//存放签名key的本地路径
+            //签名密码
+            storePassword "123789"
+            //别名
+            keyAlias "zlfcapp"
+            //别名密码
+            keyPassword "123789"
+        }
+    }
+    compileSdkVersion 29
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        applicationId "com.zlfcapp.poster"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        packagingOptions {
+            //解决编译时 More than one file was found with OS independent path 'META-INF/rxjava.properties'这个错误
+            exclude 'META-INF/rxjava.properties'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/androidx.legacy_legacy-support-v4.version'
+    }
+    buildTypes {
+        release {
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            // 是否开启混淆
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //  加上以下两句 #线下调试
+            debuggable true
+            signingConfig signingConfigs.release
+        }
+        //添加以下 #线下调试
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildToolsVersion = '29.0.2'
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api project(path: ':imageeditlibrary')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    api 'com.squareup.okhttp3:okhttp:3.8.1'
+    api 'com.google.android.material:material:1.0.0'
+    api 'androidx.palette:palette:1.0.0'
+    api 'com.king.thread:nevercrash:1.0.0'
+    api 'com.baidu.mobstat:mtj-sdk:latest.integration'
+    api 'com.squareup.okio:okio:1.11.0'
+    api 'com.hannesdorfmann.mosby:mvp:2.0.1'
+    api 'com.hannesdorfmann.mosby:viewstate:2.0.1'
+    api 'org.greenrobot:eventbus:3.0.0'
+    api 'com.king.base:base:2.0'
+    api 'com.google.dagger:dagger:2.9'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    api 'com.jude:easyrecyclerview:4.3.7'
+    api 'com.squareup.retrofit2:retrofit:2.1.0'
+    // 改成adapter-rxjava2
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    api 'io.reactivex:rxandroid:1.2.1'
+    api 'io.reactivex:rxjava:1.1.6'
+    api 'com.github.maning0303:MNProgressHUD:V1.0.9'
+    api 'com.mylhyl:acp:1.2.0'
+    // 版本更新框架
+    // 版本更新框架
+    api 'com.qianwen:update-app:3.5.2'
+    api 'com.qianwen:okhttp-utils:3.8.0'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+
+    //  换肤框架
+    api files('libs/magicasakura-release.aar')
+    // 图片浏览
+    api 'com.github.maning0303:MNImageBrowser:V1.2.5X'
+    // 一次
+    api 'com.jonathanfinerty.once:once:1.2.2'
+    api 'androidx.multidex:multidex:2.0.1'
+    // 工具类 blankj 使用介绍--> README-CN.md
+    api 'com.blankj:utilcodex:1.28.4'
+    //qq UI
+    api 'com.qmuiteam:qmui:2.0.0-alpha10'
+    api 'com.github.HuanTanSheng:EasyPhotos:3.0.6'
+    api 'org.litepal.android:java:3.0.0'  //添加依赖
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    implementation 'com.github.Graypn:RoundButton:1.0.1'
+
+}
