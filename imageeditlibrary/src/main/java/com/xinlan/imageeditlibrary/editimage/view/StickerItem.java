@@ -807,6 +807,7 @@ public class StickerItem extends ImageViewTouch {
         canvas.rotate(rotate, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
 //        canvas.drawText(mText, x, y, mPaint);
         y = y - 30;
+        x = (int) (x + mPaint.getTextSize())-PADDING;
         for (int i = 0; i < mText.length(); i++) {
             int size = (int) mPaint.getTextSize();
             y = y + size;
