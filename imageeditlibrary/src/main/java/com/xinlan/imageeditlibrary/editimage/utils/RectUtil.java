@@ -30,6 +30,16 @@ public class RectUtil {
         rect.bottom += dy;
     }
 
+    public static void scaleLongRect(RectF rect, float scale) {
+        float h = rect.height();
+
+        float newH = scale * h;
+
+        float dy = (newH - h) / 2;
+        rect.top -= dy;
+        rect.bottom += dy;
+    }
+
     /**
      * 矩形绕指定点旋转
      *

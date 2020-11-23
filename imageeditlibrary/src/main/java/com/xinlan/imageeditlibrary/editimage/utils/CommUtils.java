@@ -521,5 +521,62 @@ public class CommUtils {
     }
 
 
+    public static void showLongInputDialog(Activity activity, StickerItem stickerItem, StickerView stickerView) {
+        final TextInputDialog dialog = new TextInputDialog(activity);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        //获取dialog中的eittext
+        mInputText = dialog.getEditInput();
+        oldText = stickerItem.getmText();
+        //文本贴图
+        mInputText.requestFocus();
+        stickerItem.setEditText(mInputText);
+        mInputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editable.toString().trim();
+                stickerView.setTextStickerContent(stickerItem,text);
+                if(!text.equals(oldText)){
+                    EditData data = new EditData();
+                    data.setType(ConstantLogo.TEXT);
+                    data.setText(text);
+                    EventBus.getDefault().post(data);
+                }
+                //给一个特殊标识，防止textwatcher侦听不到
+                String flagt = text + "$";
+                //避免出现text为空或者删除掉该textstick点击空白处弹出输入框的尴尬
+                //StringUtils.isEquals(flagt)说明text为空或者被删除
+                if (!ObjectUtils.equals(flagt, "$")) {
+                    stickerItem.setOnEditClickListener(v -> {
+                        showLongInputDialog(activity,stickerItem,stickerView);
+                        mInputText.setText(stickerItem.getmText());
+                    });
+                } else {
+                    stickerItem.setOnEditClickListener(v -> {
+                        return;
+                    });
+                }
+                oldText = text;
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+        });
+        //如果用户未输入任何字符，则textwatch监听不到，防止点击无反应
+        if (stickerItem.getmText().equals(activity.getResources().getString(R.string.input_hint))) {
+            stickerView.setOnEditClickListener(v -> {
+                showInputDialog(activity, stickerItem,stickerView);
+            });
+        }
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE |
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
 }
 

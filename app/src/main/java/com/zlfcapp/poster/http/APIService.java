@@ -92,4 +92,8 @@ public interface APIService {
     //查询缩略图
     @POST("api/admin/posters/imgList")
     Observable<Result<String>> queryImageList(@QueryMap Map<String, Object> dynamic);
+    //上传编辑之后的图
+    @Multipart
+    @POST("api/admin/posters/uploadLower")
+    Observable<Result<String>> uploadLower(@QueryMap Map<String, Object> dynamic,@Part() MultipartBody.Part... parts);
 }

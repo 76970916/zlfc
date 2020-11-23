@@ -16,9 +16,13 @@ import com.zlfcapp.poster.http.listener.HttpClientListener;
 import com.zlfcapp.poster.mvp.base.BasePresenter;
 import com.zlfcapp.poster.mvp.view.IHomeView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.MultipartBody;
 
 /**
  * Created by ZhangBx on 2018/7/25.
@@ -91,6 +95,7 @@ public class HomePresenter extends BasePresenter<IHomeView> {
                 }.getType();
                 List<ImageResult> list = gson.fromJson(array, type);
                 getView().queryImgList(list);
+                EventBus.getDefault().post(list);
             }
 
             @Override
@@ -143,6 +148,22 @@ public class HomePresenter extends BasePresenter<IHomeView> {
             @Override
             public void onError(int code, String message) {
                 getView().onError(code, message);
+            }
+        });
+    }
+    //上传编辑之后的图
+
+    public void uploadLower(Map<String, Object> map, MultipartBody.Part[] parts ) {
+        httpClient(getService().uploadLower(map,parts), new HttpClientListener<String>() {
+            @Override
+            public void onSuccess(String response) {
+                LogUtils.d("成功");
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                getView().onError(new Throwable());
+                LogUtils.d("失败-->" + message);
             }
         });
     }

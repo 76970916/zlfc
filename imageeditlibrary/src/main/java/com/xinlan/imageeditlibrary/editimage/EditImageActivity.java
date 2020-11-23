@@ -404,7 +404,6 @@ public class EditImageActivity extends BaseActivity {
                                     @Override
                                     public void onProgress(float progress, long total) {
                                     }
-
                                     @Override
                                     public void onError(String error) {
                                         tipDialog.dismiss();
@@ -1227,6 +1226,8 @@ public class EditImageActivity extends BaseActivity {
             if (largerCode == 1) {
                 params.height = metrics.widthPixels;
                 params_imageSpace.height = metrics.widthPixels;
+            } else if (largerCode == 2) {
+                    //1080*1920
             } else {
                 params.height = tabHeight;
                 params_imageSpace.height = tabHeight;

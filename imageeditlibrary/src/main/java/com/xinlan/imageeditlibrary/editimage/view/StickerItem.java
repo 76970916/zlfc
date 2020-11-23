@@ -30,9 +30,7 @@ import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 public class StickerItem extends ImageViewTouch {
     private static final float MIN_SCALE = 0.15f;
     private static final int HELP_BOX_PAD = 25;
-
     private static final int BUTTON_WIDTH = Constants.STICKER_BTN_HALF_SIZE;
-
     private int id;
     public Bitmap bitmap;
     public String path;//图片路径
@@ -49,12 +47,9 @@ public class StickerItem extends ImageViewTouch {
     private Paint dstPaint = new Paint();
     private Paint paint = new Paint();
     private Paint helpBoxPaint = new Paint();
-
     private float initWidth;// 加入屏幕时原始宽度
-
     private static Bitmap deleteBit;
     private static Bitmap rotateBit;
-
     private Paint debugPaint = new Paint();
     public RectF detectRotateRect;
 
@@ -108,6 +103,8 @@ public class StickerItem extends ImageViewTouch {
     private boolean isShowHelpBox = true;
     private int phoneHeight;
     private int phoneWith;
+    public static int textCount;
+
     public Typeface getTextType() {
         return textType;
     }
@@ -115,7 +112,7 @@ public class StickerItem extends ImageViewTouch {
     public void setTextType(Typeface textType) {
         this.textType = textType;
         mPaint.setTypeface(textType);
- 
+
     }
 
     //设置字体
@@ -129,6 +126,7 @@ public class StickerItem extends ImageViewTouch {
     private float lineSpacing;
     private boolean textEm;
     public int itemType;
+    public boolean longitudinal = false;
 
     public int getSiteX() {
         return siteX;
@@ -378,12 +376,11 @@ public class StickerItem extends ImageViewTouch {
         rotateRect = new RectF(helpBox.right - BUTTON_WIDTH, helpBox.bottom
                 - BUTTON_WIDTH, helpBox.right + BUTTON_WIDTH, helpBox.bottom
                 + BUTTON_WIDTH);
-
         detectRotateRect = new RectF(rotateRect);
         detectDeleteRect = new RectF(deleteRect);
     }
 
-    public void textInit(Context context, Typeface type,int phoneHeight,int phoneWith) {
+    public void textInit(Context context, Typeface type, int phoneHeight, int phoneWith) {
         this.itemType = ConstantLogo.TEXT;
         this.phoneHeight = phoneHeight;
         this.phoneWith = phoneWith;
@@ -449,22 +446,19 @@ public class StickerItem extends ImageViewTouch {
      */
     public void updatePos(final float dx, final float dy) {
         this.matrix.postTranslate(dx, dy);// 记录到矩阵中
-
         dstRect.offset(dx, dy);
-
         // 工具按钮随之移动
         helpBox.offset(dx, dy);
         deleteRect.offset(dx, dy);
         rotateRect.offset(dx, dy);
-
         this.detectRotateRect.offset(dx, dy);
         this.detectDeleteRect.offset(dx, dy);
     }
+
     public void updateText(final float dx, final float dy) {
         layout_x += dx;
         layout_y += dy;
     }
-
 
 
     /**
@@ -722,7 +716,11 @@ public class StickerItem extends ImageViewTouch {
 
 
     private void drawContent(Canvas canvas) {
-        drawText(canvas);
+        if (longitudinal) {
+            drawTextLongitudinal(canvas, textCount);
+        } else {
+            drawText(canvas);
+        }
         //draw x and rotate button
         int offsetValue = ((int) detectDeleteRect.width()) >> 1;
         detectDeleteRect.offsetTo(mHelpBoxRect.left - offsetValue, mHelpBoxRect.top - offsetValue);
@@ -740,8 +738,6 @@ public class StickerItem extends ImageViewTouch {
         canvas.rotate(mRotateAngle, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
         canvas.drawRoundRect(mHelpBoxRect, 10, 10, mHelpPaint);
         canvas.restore();
-
-
         canvas.drawBitmap(mDeleteBitmap, mDeleteRect, detectDeleteRect, null);
 //        canvas.drawBitmap(mRotateBitmap, mRotateRect, mRotateDstRect, null);
         //canvas.drawRect(mRotateDstRect, debugPaint);
@@ -756,16 +752,15 @@ public class StickerItem extends ImageViewTouch {
         if (TextUtils.isEmpty(mText)) {
             return;
         }
-
         int x = _x;
         int y = _y;
 
         mPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
         mTextRect.offset(x - (mTextRect.width() >> 1), y);
-        int df_with =100;
+        int df_with = 100;
         int top_height = phoneHeight / 3 - df_with;
         int left_with = phoneWith / 2 - df_with;
-        int bottom_height = phoneHeight/ 3 + df_with;
+        int bottom_height = phoneHeight / 3 + df_with;
         int right_with = phoneWith / 2 + df_with;
         mHelpBoxRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING
                 , mTextRect.right + PADDING, mTextRect.bottom + PADDING);
@@ -776,6 +771,46 @@ public class StickerItem extends ImageViewTouch {
         canvas.scale(scale, scale, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
         canvas.rotate(rotate, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
         canvas.drawText(mText, x, y, mPaint);
+        canvas.restore();
+    }
+
+    private void drawTextLongitudinal(Canvas canvas, int count) {
+        drawTextLongitudinal(canvas, layout_x, layout_y, mScale, mRotateAngle, count);
+    }
+
+    public void drawTextLongitudinal(Canvas canvas, int _x, int _y, float scale, float rotate, int count) {
+        if (TextUtils.isEmpty(mText)) {
+            return;
+        }
+        int x = _x;
+        int y = _y;
+        mPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
+        int mWith = (mTextRect.width() >> 1);
+        mTextRect.offset(x -mWith, y);
+        int df_with = 100;
+        int top_height = phoneHeight / 3 - df_with;
+        int left_with = phoneWith / 2 - df_with;
+        int bottom_height = phoneHeight / 3 + df_with;
+        int right_with = phoneWith / 2 + df_with;
+        int dy = mTextRect.bottom + PADDING - (mTextRect.top - PADDING);
+        int dx = (mTextRect.right - mTextRect.left - PADDING)/2;
+        int with = mTextRect.left - PADDING + dx;
+        mHelpBoxRect.set(with-10, mTextRect.top - PADDING
+                , with+90 , mTextRect.bottom + PADDING+(mPaint.getTextSize()*mText.length()));
+//        mHelpBoxRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING
+//                , mTextRect.right + PADDING, mTextRect.bottom + PADDING);
+//        mHelpBoxRect.set(left_with, top_height
+//                , right_with, bottom_height);
+        RectUtil.scaleLongRect(mHelpBoxRect, scale);
+        canvas.save();
+        canvas.scale(scale, scale, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
+        canvas.rotate(rotate, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
+//        canvas.drawText(mText, x, y, mPaint);
+        for (int i = 0; i < mText.length(); i++) {
+            int size = (int) mPaint.getTextSize();
+            y = y + size;
+            canvas.drawText(mText.substring(i,i+1), x,y , mPaint);
+        }
         canvas.restore();
     }
 
@@ -794,7 +829,7 @@ public class StickerItem extends ImageViewTouch {
             layout_y = siteY;
         } else {
             layout_x = phoneWith / 2;
-            layout_y =  phoneHeight/ 3;
+            layout_y = phoneHeight / 3;
         }
         mRotateAngle = 0;
         mScale = 1;
@@ -850,7 +885,6 @@ public class StickerItem extends ImageViewTouch {
     public interface OnDeleteClickListener {
         void onDeleteClick(View v, int id);
     }
-
 
 
 }

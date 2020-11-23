@@ -223,7 +223,6 @@ public class StickerView extends ImageViewTouch {
         void onEditClick(View v);
     }
 
-
     public interface OnStickerClickListener {
         default void delete(StickerItem item) {
 
@@ -377,7 +376,19 @@ public class StickerView extends ImageViewTouch {
         currentPosition++;
         this.invalidate();// 重绘视图
     }
-
+    public void addTextLongitudinal(Typeface type, int phoneHeight, int phoneWith) {
+        StickerItem item = new StickerItem(this.getContext());
+        item.itemType = ConstantLogo.TEXT;
+        item.longitudinal = true;
+        item.listPosition = currentPosition;
+        item.isDrawHelpTool = true;
+        item.textInit(this.getContext(), type, phoneHeight, phoneWith);
+        bank.put(bank.size(), item);
+        oldMap.put(oldMap.size(), item);
+        currentItem = item;
+        currentPosition++;
+        this.invalidate();// 重绘视图
+    }
     public void setTextStickerContent(StickerItem stickerItem, String Context) {
         currentItem.setText(Context);
         invalidate();

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.LitePal;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +95,9 @@ import java.util.Objects;
 import java.util.Random;
 
 import butterknife.BindView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import static com.zlfcapp.poster.mvp.fragment.WorksFragment.ACTION_REQUEST_EDITIMAGE;
 
@@ -331,6 +338,53 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                 LinearLayout pop_delete = popView.findViewById(R.id.menu_delete);
                 LinearLayout pop_rename = popView.findViewById(R.id.menu_rename);
                 LinearLayout pop_copy = popView.findViewById(R.id.menu_copy);
+                LinearLayout pop_uplode = popView.findViewById(R.id.menu_uplode);
+                //上传
+                pop_uplode.setOnClickListener(v -> {
+                    String device_id = CommonUtils.getDevice_id();
+                    Map<String, Object> map = produceReqArg.generateObj(device_id);
+                    map.put("device_id", device_id);
+                    map.put("id", item.getId());
+                    MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(item.getId())).findFirst(MainLogoBean.class);
+                    List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(item.getId())).order("createtime desc").find(LogoBean.class);
+                    String path;
+                    path = FileUtil.getImageFolderPath(mContext);
+                    File fileList = new File(path);
+                    List<MultipartBody.Part> list = new ArrayList<>();
+                    if (!fileList.exists() && !fileList.mkdir()) {
+                        return;
+                    }
+                    int count = 0;
+                    for (LogoBean logoBean : editList) {
+                        count++;
+                        int logoType = logoBean.getType();
+                        if (logoType == 1) {
+                            //图片
+                            byte[] bytes = logoBean.getImage();
+                            Bitmap bitmap = BitmapUtils.byteToBitmap(bytes);
+                            File file = new File(path + "/" + System.currentTimeMillis() + count + ".png");
+                            try {
+                                if (!file.exists() && !file.createNewFile()) {
+                                    continue;
+                                }
+                                FileOutputStream out = new FileOutputStream(file);
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                                out.flush();
+                                out.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
+                            MultipartBody.Part part = MultipartBody.Part.createFormData(URLEncoder.encode(file.getName()), file.getName(), requestFile);
+                            list.add(part);
+                        }
+                    }
+                    MultipartBody.Part[] parts = new MultipartBody.Part[list.size()-1];
+                    for (int i = 0; i < list.size() -1; i++) {
+                        parts[i] = list.get(i);
+                    }
+                    getPresenter().uploadLower(map,parts);
+                });
                 // 编辑
                 pop_edit.setOnClickListener(view -> {
                     startActivity(new Intent(getActivity(), EditImageActivity.class).putExtra(Constants.LOGO_ID, item.getId()));

@@ -62,7 +62,7 @@ public class CanvasLargerActivity extends BaseActivity {
     ViewPagerAdapter mAdapter;
     private List<Fragment> mFragments = new ArrayList<>();
     DisplayMetrics metrics;
-    int code = 1;
+    int code = 2;
     int percentWith = 100;
     int percentHeight = 100;
     int maxHeight;
@@ -86,8 +86,8 @@ public class CanvasLargerActivity extends BaseActivity {
         maxHeight = imageHeight;
         maxWith = imageWith;
         params = (RelativeLayout.LayoutParams) relativeCanvas.getLayoutParams();
-        params.width = (int) (metrics.widthPixels * 0.7);
-        params.height = (int) (metrics.widthPixels * 0.7);
+        imageWith = (int) (metrics.widthPixels * 0.8);
+        imageHeight = (int) (imageWith * 1.9);
         relativeCanvas.setLayoutParams(params);
         querenBtn.setOnClickListener(v -> {
             startEdit();
@@ -143,7 +143,8 @@ public class CanvasLargerActivity extends BaseActivity {
                     break;
                 case 2:
                     //1080x1920
-                    imageWith = (int) (metrics.widthPixels * 0.5);
+                    code = 2;
+                    imageWith = (int) (metrics.widthPixels * 0.8);
                     imageHeight = (int) (imageWith * 1.9);
                     params.width = imageWith;
                     params.height = imageHeight;

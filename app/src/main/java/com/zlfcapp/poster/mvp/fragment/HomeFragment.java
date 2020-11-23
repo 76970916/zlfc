@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -94,9 +95,9 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
     private List<Fragment> mFragments = new ArrayList<>();
     ViewPagerAdapter mAdapter;
     static int itemType;
+    String imageType = "节日";
     CenterLayoutManager manager;
     int layoutTop;
-
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
         HomeFragment fragment = new HomeFragment();
@@ -134,39 +135,6 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
             Intent it = new Intent(getActivity(), CanvasLargerActivity.class);
             startActivityForResult(it, ACTION_REQUEST_EDITIMAGE);
         });
-//        mScrollView.setOnScrollListener(new HomeScrollView.OnScrollMoveListener() {
-//            @Override
-//            public void moveListener(int scrollY) {
-////                if (scrollY >= recyclerHome.getTop()) {
-////                    if (recyclerAdd == null) {
-//////                        showSuspend();
-////                    }
-////                } else if (scrollY <= recyclerHome.getBottom()) {
-////                    if (recyclerAdd != null) {
-////                        removeSuspend();
-////                    }
-////                }
-//            }
-//
-//            @Override
-//            public void touch() {
-//                layoutTop = recyclerHome.getTop();
-//            }
-//        });
-    }
-
-//    private void removeSuspend() {
-//        recyclerAdd.setVisibility(View.GONE);
-//    }
-
-    private void showSuspend() {
-        //添加recycler
-//        recyclerAdd.setVisibility(View.VISIBLE);
-//        recyclerAdd.setLayoutManager(manager);
-//        recyclerAdd.setAdapter(adapter);
-//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) recyclerAdd.getLayoutParams();
-//        params.gravity = Gravity.TOP;
-//        recyclerAdd.setLayoutParams(params);
     }
 
     private void initAdapter() {
@@ -200,9 +168,9 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //                    moveRecycler(dx);
                     manager.smoothScrollToPosition(recyclerHome, new RecyclerView.State(), holder.getAdapterPosition());
                     itemType = item.getType();
+                    setImageType(holder.getAdapterPosition());
                     templatePosition = holder.getAdapterPosition();
-                    viewpagerHome.setCurrentItem(holder.getAdapterPosition());
-                    mAdapter.notifyDataSetChanged();
+                    queryOnlieData();
 //                    ViewPagerHomeFragment.refreshData();
                     notifyDataSetChanged();
                 });
@@ -282,12 +250,13 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //            LitePal.deleteAll(LogoBean.class);
 //            getPresenter().queryAllTempData(map);
 //        });
-        queryOnlieData();
-        newFragment();
         initTemplate();
+        queryOnlieData();
+
     }
 
     private void newFragment() {
+        mFragments.clear();
         mFragments.add(ViewPagerHomeFragment.newInstance("节日"));
         mFragments.add(ViewPagerHomeFragment.newInstance("环保"));
         mFragments.add(ViewPagerHomeFragment.newInstance("宣传"));
@@ -369,21 +338,15 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
     private void queryOnlieData() {
         String device_id = CommonUtils.getDevice_id();
         Map<String, Object> map = produceReqArg.generateObj(device_id);
-//        if (CommonUtils.isQueryData()) {
-//            tipDialog.show();
-//            map.put("device_id", device_id);
-//            map.put("page", "0");
-//
-//            map.put("limit", "40");
-//            // 查询字体数据
-//            getPresenter().subQueryFontList(map);
-//            Map<String, Object> mapImage = produceReqArg.generateObj(device_id);
-//            mapImage.put("device_id", device_id);
-//            mapImage.put("type", "节日");
-//            // 查询背景图片素材
-//            getPresenter().subQueryImgList(mapImage);
-//
-//        }
+        if (CommonUtils.isQueryData()) {
+            map.put("device_id", device_id);
+            map.put("page", "0");
+
+            map.put("limit", "40");
+            // 查询字体数据
+            getPresenter().subQueryFontList(map);
+
+        }
         Map<String, Object> mapImage = produceReqArg.generateObj(device_id);
         mapImage.put("device_id", device_id);
         mapImage.put("type", "节日");        // 查询背景图片素材
@@ -396,14 +359,37 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //        getPresenter().queryAllTempData(map);
     }
 
-
+   private void setImageType(int clickPosition){
+       switch (clickPosition) {
+           case 0:
+               imageType = "节日";
+               break;
+           case 1:
+               imageType = "环保";
+               break;
+           case 2:
+               imageType = "宣传";
+               break;
+           case 3:
+               imageType = "简约";
+               break;
+           case 4:
+               imageType = "社团";
+               break;
+           case 5:
+               imageType = "卡通";
+               break;
+       }
+   }
     /**
      * @Author lixh
      * @Date 2020/10/26 19:47
      * @Description: 初始化模板
      */
     private void initTemplate() {
-        mAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(),mFragments);
+        newFragment();
+        mAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mFragments);
+        viewpagerHome.setCurrentItem(0);
         viewpagerHome.setAdapter(mAdapter);
         viewpagerHome.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -414,7 +400,9 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
             @Override
             public void onPageSelected(int position) {
                 templatePosition = position;
+                Log.d("viewPagerPostition", String.valueOf(position));
                 manager.smoothScrollToPosition(recyclerHome, new RecyclerView.State(), position);
+                setImageType(position);
                 adapter.notifyDataSetChanged();
             }
 
@@ -465,16 +453,18 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 
     @Override
     public void queryImgList(List<ImageResult> list) {
-        LitePal.deleteAll(ImageResult.class, "type=?", "节日");
-        if (ObjectUtils.isNotEmpty(list)) {
-            for (ImageResult imageResult : list) {
-                imageResult.save();
-            }
-        }
+        ViewPagerHomeFragment.setData(imageType);
+        mAdapter.notifyDataSetChanged();
+//        LitePal.deleteAll(ImageResult.class, "type=?", "节日");
+//        if (ObjectUtils.isNotEmpty(list)) {
+//            for (ImageResult imageResult : list) {
+//                imageResult.save();
+//            }
+//        }
 //
 //        ViewPagerHomeFragment.setData(list.get(0).getType());
-        EventBus.getDefault().post("节日");
-        mAdapter.notifyDataSetChanged();
+//        viewpagerHome.setCurrentItem(0);
+
 
 //        mAdapter.notifyDataSetChanged();
     }
@@ -586,7 +576,8 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         List<Fragment> fragmentList;
-        public ViewPagerAdapter(FragmentManager fm,List<Fragment>fragmentList) {
+
+        public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
             super(fm);
             this.fragmentList = fragmentList;
         }

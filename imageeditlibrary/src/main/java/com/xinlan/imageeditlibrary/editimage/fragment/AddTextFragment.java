@@ -148,7 +148,6 @@ public class AddTextFragment extends BaseEditFragment {
 
     @BindView(R2.id.iv_data)
     ImageView iv_data;
-
     private EditText mInputText;
     private FrameLayout work_space;
     private FrameLayout frameLayout;
@@ -161,6 +160,7 @@ public class AddTextFragment extends BaseEditFragment {
     public List<TextStickerView> mTextList = new ArrayList<>();
     private static final int addTextColor = 10001;
     public static final String FONT_GET_URL = "http://battery.zlfc.mobi/api/admin/font/fontDown";
+    public boolean longitudinal = false;
 
     public static AddTextFragment newInstance() {
         AddTextFragment fragment = new AddTextFragment();
@@ -187,6 +187,7 @@ public class AddTextFragment extends BaseEditFragment {
         text.add("颜色");
         text.add("透明度");
         text.add("其他");
+        text.add("纵向");
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(RecyclerView.HORIZONTAL);
         recycle_text_style.setLayoutManager(layoutManager);
@@ -233,6 +234,16 @@ public class AddTextFragment extends BaseEditFragment {
                             line_text_size.setVisibility(View.GONE);
                             line_colors.setVisibility(View.GONE);
                             line_clarity.setVisibility(View.GONE);
+                            break;
+                        case "纵向":
+                            text.set(text.size() - 1, "横向");
+                            longitudinal = true;
+                            textStylesAdapter.notifyDataSetChanged();
+                            break;
+                        case "横向":
+                            longitudinal = false;
+                            text.set(text.size() - 1, "纵向");
+                            textStylesAdapter.notifyDataSetChanged();
                             break;
                         default:
                             break;
@@ -534,14 +545,27 @@ public class AddTextFragment extends BaseEditFragment {
     private void createTextStickView(LogoBean logoBean) {
         DisplayMetrics metrics;
         metrics = getResources().getDisplayMetrics();
-        activity.mainImage.addText(null, metrics.heightPixels, metrics.widthPixels);
-        mTextView = activity.mainImage.getItem();
-        mTextView.setmAlpha(255);
-        CommUtils.showInputDialog(activity, mTextView, activity.mainImage);
-        activity.mainImage.setOnEditClickListener(v -> {
+        if (longitudinal) {
+            activity.mainImage.addTextLongitudinal(null, metrics.heightPixels, metrics.widthPixels);
+            mTextView = activity.mainImage.getItem();
+            mTextView.setmAlpha(255);
+            CommUtils.showLongInputDialog(activity, mTextView, activity.mainImage);
+            activity.mainImage.setOnEditClickListener(v -> {
+                CommUtils.showLongInputDialog(activity, mTextView, activity.mainImage);
+                CommUtils.mInputText.setText(mTextView.getmText());
+            });
+        } else {
+            activity.mainImage.addText(null, metrics.heightPixels, metrics.widthPixels);
+            mTextView = activity.mainImage.getItem();
+            mTextView.setmAlpha(255);
             CommUtils.showInputDialog(activity, mTextView, activity.mainImage);
-            CommUtils.mInputText.setText(mTextView.getmText());
-        });
+            activity.mainImage.setOnEditClickListener(v -> {
+                CommUtils.showInputDialog(activity, mTextView, activity.mainImage);
+                CommUtils.mInputText.setText(mTextView.getmText());
+            });
+        }
+
+
         activity.mainImage.setOnViewClickListener(v -> {
             mTextView = activity.mainImage.getItem();
         });
@@ -552,7 +576,6 @@ public class AddTextFragment extends BaseEditFragment {
                 LitePal.delete(LogoBean.class, id);
             }
         });
-
         activity.setImageData();
     }
 
@@ -670,8 +693,7 @@ public class AddTextFragment extends BaseEditFragment {
                 activity.isExit = true;
                 tv_size.setText("" + progress);
                 seekbar_size.setProgress(progress);
-                activity.mainImage.setTextSize(new Float(progress * 1.5));
-
+                activity.mainImage.setTextSize(new Float(progress * 3));
             }
 
             @Override
