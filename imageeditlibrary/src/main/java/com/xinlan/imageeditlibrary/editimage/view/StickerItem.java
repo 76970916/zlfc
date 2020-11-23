@@ -796,7 +796,7 @@ public class StickerItem extends ImageViewTouch {
         int dx = (mTextRect.right - mTextRect.left - PADDING)/2;
         int with = mTextRect.left - PADDING + dx;
         mHelpBoxRect.set(with-10, mTextRect.top - PADDING
-                , with+90 , mTextRect.bottom + PADDING+(mPaint.getTextSize()*mText.length()));
+                , with+mPaint.getTextSize()+30 , mTextRect.bottom + PADDING+(mPaint.getTextSize()*mText.length()));
 //        mHelpBoxRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING
 //                , mTextRect.right + PADDING, mTextRect.bottom + PADDING);
 //        mHelpBoxRect.set(left_with, top_height
@@ -806,6 +806,7 @@ public class StickerItem extends ImageViewTouch {
         canvas.scale(scale, scale, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
         canvas.rotate(rotate, mHelpBoxRect.centerX(), mHelpBoxRect.centerY());
 //        canvas.drawText(mText, x, y, mPaint);
+        y = y - 30;
         for (int i = 0; i < mText.length(); i++) {
             int size = (int) mPaint.getTextSize();
             y = y + size;
