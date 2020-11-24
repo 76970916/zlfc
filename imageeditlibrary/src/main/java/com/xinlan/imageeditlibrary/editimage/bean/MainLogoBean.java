@@ -35,6 +35,8 @@ public class MainLogoBean extends LitePalSupport {
     private String preViewPath;
 
     private String itemBgColor;
+    private byte[] image;
+
 
     @Column(ignore = true)
     public boolean exit;

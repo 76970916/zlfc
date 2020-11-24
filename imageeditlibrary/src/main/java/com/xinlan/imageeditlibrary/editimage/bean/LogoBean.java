@@ -62,6 +62,15 @@ public class LogoBean extends LitePalSupport {
     // 1 是本地数据可修改
     private int online;
 
+    boolean longitudinal; //判断是横排还是竖排
+
+    public boolean isLongitudinal() {
+        return longitudinal;
+    }
+
+    public void setLongitudinal(boolean longitudinal) {
+        this.longitudinal = longitudinal;
+    }
 
     public int getOnline() {
         return online;

@@ -3,6 +3,7 @@ package com.zlfcapp.poster.mvp.view;
 import com.xinlan.imageeditlibrary.editimage.bean.LogoTemplate;
 import com.xinlan.imageeditlibrary.editimage.bean.TypeFace;
 import com.xinlan.imageeditlibrary.editimage.bean.ImageResult;
+import com.xinlan.imageeditlibrary.editimage.bean.LowerListBean;
 import com.zlfcapp.poster.mvp.base.BaseView;
 
 import java.util.List;
@@ -27,8 +28,15 @@ public interface IHomeView extends BaseView {
     default void queryAllTemplate(List<LogoTemplate> list) {
 
     }
+    default void queryLowerList(List<LowerListBean> list,String imageUrl,int l_id) {
+
+    }
 
     default void onError(int code, String message) {
+
+    }
+
+    default void uploadImage() {
 
     }
 }

@@ -40,6 +40,7 @@ import com.xinlan.imageeditlibrary.editimage.bean.ImageResult;
 import com.zlfcapp.poster.bean.TemplateCount;
 import com.zlfcapp.poster.mvp.activity.LogoListActivity;
 import com.zlfcapp.poster.mvp.adapter.CenterLayoutManager;
+import com.zlfcapp.poster.mvp.adapter.FragmentAdapter;
 import com.zlfcapp.poster.mvp.base.BaseFragment;
 import com.zlfcapp.poster.mvp.presenter.HomePresenter;
 import com.zlfcapp.poster.mvp.view.IHomeView;
@@ -93,11 +94,12 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //    @BindView(R.id.recycler_add)
 //    RecyclerView recyclerAdd;
     private List<Fragment> mFragments = new ArrayList<>();
-    ViewPagerAdapter mAdapter;
+    FragmentAdapter mAdapter;
     static int itemType;
     String imageType = "节日";
     CenterLayoutManager manager;
     int layoutTop;
+
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
         HomeFragment fragment = new HomeFragment();
@@ -170,8 +172,8 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
                     itemType = item.getType();
                     setImageType(holder.getAdapterPosition());
                     templatePosition = holder.getAdapterPosition();
-                    queryOnlieData();
-//                    ViewPagerHomeFragment.refreshData();
+                    viewpagerHome.setCurrentItem(holder.getAdapterPosition());
+                    mAdapter.notifyDataSetChanged();
                     notifyDataSetChanged();
                 });
             }
@@ -250,19 +252,19 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //            LitePal.deleteAll(LogoBean.class);
 //            getPresenter().queryAllTempData(map);
 //        });
+        newFragment();
         initTemplate();
         queryOnlieData();
 
     }
 
     private void newFragment() {
-        mFragments.clear();
-        mFragments.add(ViewPagerHomeFragment.newInstance("节日"));
-        mFragments.add(ViewPagerHomeFragment.newInstance("环保"));
-        mFragments.add(ViewPagerHomeFragment.newInstance("宣传"));
-        mFragments.add(ViewPagerHomeFragment.newInstance("简约"));
-        mFragments.add(ViewPagerHomeFragment.newInstance("社团"));
-        mFragments.add(ViewPagerHomeFragment.newInstance("卡通"));
+        mFragments.add(FestivalFragment.newInstance());
+        mFragments.add(EnvironmentFragment.newInstance());
+        mFragments.add(PropagandaFragment.newInstance());
+        mFragments.add(SimplicityFragment.newInstance());
+        mFragments.add(AssociationFragment.newInstance());
+        mFragments.add(CartoonFragment.newInstance());
     }
 
     private void importData() {
@@ -351,7 +353,6 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
         mapImage.put("device_id", device_id);
         mapImage.put("type", "节日");        // 查询背景图片素材
         getPresenter().subQueryImgList(mapImage);
-
 //        map.put("device_id", device_id);
 //        map.put("page", "0");
 //        map.put("limit", "600");
@@ -359,37 +360,36 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 //        getPresenter().queryAllTempData(map);
     }
 
-   private void setImageType(int clickPosition){
-       switch (clickPosition) {
-           case 0:
-               imageType = "节日";
-               break;
-           case 1:
-               imageType = "环保";
-               break;
-           case 2:
-               imageType = "宣传";
-               break;
-           case 3:
-               imageType = "简约";
-               break;
-           case 4:
-               imageType = "社团";
-               break;
-           case 5:
-               imageType = "卡通";
-               break;
-       }
-   }
+    private void setImageType(int clickPosition) {
+        switch (clickPosition) {
+            case 0:
+                imageType = "节日";
+                break;
+            case 1:
+                imageType = "环保";
+                break;
+            case 2:
+                imageType = "宣传";
+                break;
+            case 3:
+                imageType = "简约";
+                break;
+            case 4:
+                imageType = "社团";
+                break;
+            case 5:
+                imageType = "卡通";
+                break;
+        }
+    }
+
     /**
      * @Author lixh
      * @Date 2020/10/26 19:47
      * @Description: 初始化模板
      */
     private void initTemplate() {
-        newFragment();
-        mAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mFragments);
-        viewpagerHome.setCurrentItem(0);
+        mAdapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), mFragments);
         viewpagerHome.setAdapter(mAdapter);
         viewpagerHome.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -403,6 +403,7 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
                 Log.d("viewPagerPostition", String.valueOf(position));
                 manager.smoothScrollToPosition(recyclerHome, new RecyclerView.State(), position);
                 setImageType(position);
+                viewpagerHome.setCurrentItem(position);
                 adapter.notifyDataSetChanged();
             }
 
@@ -453,8 +454,7 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
 
     @Override
     public void queryImgList(List<ImageResult> list) {
-        ViewPagerHomeFragment.setData(imageType);
-        mAdapter.notifyDataSetChanged();
+//        ViewPagerHomeFragment.setData(imageType);
 //        LitePal.deleteAll(ImageResult.class, "type=?", "节日");
 //        if (ObjectUtils.isNotEmpty(list)) {
 //            for (ImageResult imageResult : list) {
@@ -574,23 +574,5 @@ public class HomeFragment extends BaseFragment<IHomeView, HomePresenter> impleme
         SPUtils.getInstance().put(com.zlfcapp.poster.Constants.QUERY_ONLINE_DATA, 0L);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        List<Fragment> fragmentList;
-
-        public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
-            super(fm);
-            this.fragmentList = fragmentList;
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-    }
 
 }

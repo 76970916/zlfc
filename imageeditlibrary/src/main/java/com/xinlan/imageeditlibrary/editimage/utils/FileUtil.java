@@ -250,6 +250,22 @@ public class FileUtil {
         return true;
     }
 
+    public static File fileForBitMap(String path ,Bitmap bitmap,int count){
+        File file = new File(path + "/" + System.currentTimeMillis() + count + ".png");
+        try {
+            if (!file.exists() && !file.createNewFile()) {
+                return null;
+            }
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
     /**
      * @Author lixh
      * @Date 2020/11/4 20:15

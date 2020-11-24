@@ -7,6 +7,8 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -96,4 +98,16 @@ public interface APIService {
     @Multipart
     @POST("api/admin/posters/uploadLower")
     Observable<Result<String>> uploadLower(@QueryMap Map<String, Object> dynamic,@Part() MultipartBody.Part... parts);
+
+    /**
+     * 上传文字等信息
+     *
+     * @return
+     */
+    @POST("api/admin/posters/uploadLowerInfo")
+    Observable<Result<String>> uploadLowerInfo(@Body RequestBody info);
+
+    //缩略图列表
+    @POST("api/admin/posters/lowerList")
+    Observable<Result<String>> lowerList(@QueryMap Map<String, Object> dynamic);
 }

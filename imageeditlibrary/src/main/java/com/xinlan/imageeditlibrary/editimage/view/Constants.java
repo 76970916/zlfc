@@ -25,6 +25,7 @@ public class Constants {
     public static final String DEL_IMAGE = "del_image";
     public static final String REFRESH_LOGO_DATA = "refresh_logo_data";
     public static final String LOGO_ID = "logo_id";
+    public static final String POSTER_ID = "poster_id";
     public static final String MTEXT_DATA = "mtext_data";
     public static final String SYNC_DATA = "sync_data";
     public static final String IS_SEARCH = "is_search";

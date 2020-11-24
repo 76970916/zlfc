@@ -2,6 +2,7 @@ package com.zlfcapp.poster.utils;
 
 
 import com.blankj.utilcode.util.AppUtils;
+import com.google.gson.JsonObject;
 import com.zlfcapp.poster.Constants;
 
 import java.util.HashMap;
@@ -48,6 +49,15 @@ public class produceReqArg {
         map.put("packagename", AppUtils.getAppPackageName());
         return map;
     }
+    public static JsonObject generateForJson(String mark) {
+        JsonObject jsonObject = new JsonObject();
+        int tm = (int) (System.currentTimeMillis() / 1000);
+        String appendMD5 = mark + Constants.MD5_CODE + tm;
+        jsonObject.addProperty("tm", String.valueOf(tm));
+        jsonObject.addProperty("key", MD5Utils.MD5(appendMD5));
+        return jsonObject;
+    }
+
 
 
 }

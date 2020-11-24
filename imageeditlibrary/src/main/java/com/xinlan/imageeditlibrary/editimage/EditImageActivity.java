@@ -71,6 +71,7 @@ import com.xinlan.imageeditlibrary.editimage.bean.ConstantLogo;
 import com.xinlan.imageeditlibrary.editimage.bean.EditData;
 import com.xinlan.imageeditlibrary.editimage.bean.ImageBean;
 import com.xinlan.imageeditlibrary.editimage.bean.LogoBean;
+import com.xinlan.imageeditlibrary.editimage.bean.LowerListBean;
 import com.xinlan.imageeditlibrary.editimage.bean.MainLogoBean;
 import com.xinlan.imageeditlibrary.editimage.bean.MessageEvent;
 import com.xinlan.imageeditlibrary.editimage.bean.SvgParm;
@@ -256,6 +257,7 @@ public class EditImageActivity extends BaseActivity {
     boolean clear;
     public boolean isExit = false;
     List<ImageBean> imageBeanList;
+    String imageUrl;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -269,6 +271,7 @@ public class EditImageActivity extends BaseActivity {
         checkInitImageLoader();
         initClick();
         checkTypeface();
+        checkPosterData();
         imageSpace.setOnClickListener(v -> {
             if (bitmapBg != null) {
                 mainBitmap = bitmapBg;
@@ -310,6 +313,7 @@ public class EditImageActivity extends BaseActivity {
 
     }
 
+
     public String createImagePath(Bitmap bitmap) {
         String filePath;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -340,6 +344,100 @@ public class EditImageActivity extends BaseActivity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void checkPosterData() {
+        int fontId = 0;
+        String fontName = null;
+        String fontUrl = null;
+        Intent intent = getIntent();
+        int l_id = intent.getIntExtra(Constants.LOGO_ID, 0);
+        if (l_id != 0) {
+            imageUrl = intent.getStringExtra("imageUrl");
+            imageUrl = imageUrl.substring(1, imageUrl.length() - 1);
+            List<LowerListBean> editList = LitePal.where("l_id = ?", String.valueOf(l_id)).find(LowerListBean.class);
+            if (!editList.isEmpty()) {
+                for (LowerListBean item : editList) {
+                    TypeFace typeFace = LitePal.where("onlineid = ?", String.valueOf(item.getTextfontid())).findFirst(TypeFace.class);
+                    if (ObjectUtils.isNotEmpty(typeFace)) {
+                        if (ObjectUtils.isEmpty(typeFace.getLocalpath())) {
+                            fontId = item.getTextfontid();
+                            fontName = typeFace.getFontname();
+                            fontUrl = typeFace.getFonturl();
+                        }
+                    }
+                }
+            }
+            if (fontId != 0) {
+                int finalFontId = fontId;
+                final String fontname = fontName;
+                final String fonturl = fontUrl;
+                new QMUIDialog.MessageDialogBuilder(activity)
+                        .setTitle("提示")
+                        .setCancelable(false)
+                        .setCanceledOnTouchOutside(false)
+                        .setMessage("当前logo包含一款字体是否下载")
+                        .addAction("取消", (QMUIDialog dialog, int index) -> {
+                            activity.finish();
+                            dialog.dismiss();
+                        })
+                        .addAction(0, "下载", QMUIDialogAction.ACTION_PROP_POSITIVE, new QMUIDialogAction.ActionListener() {
+                            @Override
+                            public void onClick(QMUIDialog dialog, int index) {
+                                Dialog tipDialog = new QMUITipDialog.Builder(activity)
+                                        .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                                        .setTipWord("下载中..")
+                                        .create();
+                                tipDialog.show();
+                                String device_id = AddTextFragment.getDevice_id(activity);
+                                Map<String, String> map = AddTextFragment.generate(device_id);
+                                map.put("id", String.valueOf(finalFontId));
+                                map.put("device_id", device_id);
+                                String path = Objects.requireNonNull(activity.getExternalFilesDir("")).getPath() + "/download";
+                                File file = new File(path);
+                                if (!file.exists()) {
+                                    file.mkdirs();
+                                }
+                                dialog.dismiss();
+
+                                CommUtils.download(fonturl, path, map, fontname + ".ttf", new HttpManager.FileCallback() {
+                                    @Override
+                                    public void onProgress(float progress, long total) {
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+                                        tipDialog.dismiss();
+                                        ToastUtils.showShort("网络异常,字体加载失败");
+                                        initPosterData(l_id);
+                                    }
+
+                                    @Override
+                                    public void onResponse(File file) {
+                                        ContentValues roomValues = new ContentValues();
+                                        roomValues.put("isSelect", "false");
+                                        LitePal.updateAll(TypeFace.class, roomValues, "");
+                                        TypeFace typeFace = LitePal.where("onlineid = ?", String.valueOf(finalFontId)).findFirst(TypeFace.class);
+                                        typeFace.setSelect(true);
+                                        typeFace.setFontstate(101);
+                                        typeFace.setLocalpath(file.getAbsolutePath());
+                                        typeFace.update(typeFace.getId());
+                                        tipDialog.dismiss();
+                                        initPosterData(l_id);
+                                    }
+
+                                    @Override
+                                    public void onBefore() {
+                                    }
+                                });
+                            }
+                        })
+                        .create(mCurrentDialogStyle).show();
+            } else {
+                initPosterData(l_id);
+            }
+        }
+
     }
 
     /**
@@ -404,6 +502,7 @@ public class EditImageActivity extends BaseActivity {
                                     @Override
                                     public void onProgress(float progress, long total) {
                                     }
+
                                     @Override
                                     public void onError(String error) {
                                         tipDialog.dismiss();
@@ -434,6 +533,20 @@ public class EditImageActivity extends BaseActivity {
                         .create(mCurrentDialogStyle).show();
             } else {
                 initData();
+            }
+        }
+    }
+
+    private void initPosterData(int l_id) {
+        List<LowerListBean> editList = LitePal.where("l_id = ?", String.valueOf(l_id)).order("createtime desc").find(LowerListBean.class);
+        imageSpace.setVisibility(View.VISIBLE);
+        Glide.with(EditImageActivity.this).load(imageUrl).into(imageSpace);
+        for (LowerListBean lowerListBean : editList) {
+            if (lowerListBean.getType() == 1) {
+                if (ObjectUtils.isNotEmpty(lowerListBean.getText())) {
+                    //文字
+                    createTextStickView(lowerListBean);
+                }
             }
         }
     }
@@ -1070,12 +1183,73 @@ public class EditImageActivity extends BaseActivity {
         );
     }
 
+    private void createTextStickView(LowerListBean logoBean) {
+        if (ObjectUtils.isNotEmpty(logoBean)) {
+            Typeface tf = null;
+            int fontid = logoBean.getTextfontid();
+            //设置字体
+            if (fontid != 0) {
+                TypeFace typeFace = LitePal.where("onlineid = ?", String.valueOf(fontid)).findFirst(TypeFace.class);
+                if (ObjectUtils.isNotEmpty(typeFace) && ObjectUtils.isNotEmpty(typeFace.getLocalpath())) {
+                    File file = new File(typeFace.getLocalpath());
+                    tf = Typeface.createFromFile(file);
+                }
+            }
+            DisplayMetrics metrics;
+            metrics = getResources().getDisplayMetrics();
+            mainImage.addText(null, metrics.heightPixels, metrics.widthPixels);
+            StickerItem stickerItem = mainImage.getItem();
+            stickerItem.setSiteX(logoBean.getLayout_x());
+            stickerItem.setSiteY(logoBean.getLayout_y());
+            stickerItem.itemType = ConstantLogo.TEXT;
+            stickerItem.setShowHelpBox(false);
+            String name = logoBean.getText();
+            int alpha = logoBean.getTextAlpha();
+            int color = logoBean.getTextColor();
+            float textSize = logoBean.getTextsize();
+            if (!clear) {
+                stickerItem.setId(logoBean.getId());
+            }
+            stickerItem.setFontId(fontid);
+            stickerItem.setTextSize(textSize);
+            if (color == 0) {
+                color = getResources().getColor(R.color.black);
+            }
+            stickerItem.setTextColor(color);
+            stickerItem.setTextBold(logoBean.isTextBold());
+            stickerItem.setTextEm(logoBean.isTextEm());
+            stickerItem.setLineSpacing(logoBean.getLineSpacing());
+            stickerItem.setmAlpha(alpha);
+            stickerItem.resetView();
+            stickerItem.setTextType(tf);
+            mainImage.setTextStickerContent(stickerItem, name);
+            setImageData();
+            mainImage.setOnEditClickListener(v -> {
+                viewPager.setCurrentItem(3);
+                CommUtils.showInputDialog(activity, stickerItem, mainImage);
+                if (ObjectUtils.isNotEmpty(mainImage.getItem().getmText())) {
+                    CommUtils.mInputText.setText(mainImage.getItem().getmText());
+                }
+            });
+            // 单击文字
+            mainImage.setOnViewClickListener(v -> {
+                recyclerSelect.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
+                MessageEvent event = new MessageEvent();
+                event.setMessage(Constants.SYNC_DATA);
+                event.setObj(stickerItem);
+                EventBus.getDefault().post(event);
+            });
+            // 删除回调事件
+            mainImage.setOnDeleteClickListener((v, id) -> {
+                if (id != 0) {
+                    this.isExit = true;
+                    LitePal.delete(LogoBean.class, id);
+                }
+            });
+        }
+    }
 
-    /**
-     * @Author lixh
-     * @Date 2020/10/13 20:19
-     * @Description: 创建模板文字控件
-     */
     private void createTextStickView(LogoBean logoBean) {
         if (ObjectUtils.isNotEmpty(logoBean)) {
             Typeface tf = null;
@@ -1227,7 +1401,7 @@ public class EditImageActivity extends BaseActivity {
                 params.height = metrics.widthPixels;
                 params_imageSpace.height = metrics.widthPixels;
             } else if (largerCode == 2) {
-                    //1080*1920
+                //1080*1920
             } else {
                 params.height = tabHeight;
                 params_imageSpace.height = tabHeight;
@@ -1638,6 +1812,7 @@ public class EditImageActivity extends BaseActivity {
                 logoBean.setLeftRect(items.layout_x);
                 logoBean.setTopRect(items.layout_y);
                 logoBean.setLineSpacing(items.getLineSpacing());
+                logoBean.setLongitudinal(items.longitudinal);
                 if (items.getTextBold()) {
                     logoBean.setTextBold(items.getTextBold());
                 } else {

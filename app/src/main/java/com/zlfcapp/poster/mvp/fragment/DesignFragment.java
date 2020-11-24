@@ -49,6 +49,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.pixplicity.sharp.OnSvgElementListener;
@@ -144,7 +145,7 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
     public String saveFilePath;// 生成的新图片路径
     public String fileName;
     private PopupWindow addWindow = null;
-
+    private int imageId;
     public static DesignFragment newInstance() {
         Bundle args = new Bundle();
         DesignFragment fragment = new DesignFragment();
@@ -326,6 +327,8 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                 }
             }
 
+
+
             /**
              * @Author lixh
              * @Date 2020/10/31 15:15
@@ -340,11 +343,13 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                 LinearLayout pop_copy = popView.findViewById(R.id.menu_copy);
                 LinearLayout pop_uplode = popView.findViewById(R.id.menu_uplode);
                 //上传
+                MultipartBody.Part[] parts = new MultipartBody.Part[10];
                 pop_uplode.setOnClickListener(v -> {
                     String device_id = CommonUtils.getDevice_id();
                     Map<String, Object> map = produceReqArg.generateObj(device_id);
                     map.put("device_id", device_id);
-                    map.put("id", item.getId());
+                    map.put("id", 1);
+                    imageId = 1;
                     MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(item.getId())).findFirst(MainLogoBean.class);
                     List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(item.getId())).order("createtime desc").find(LogoBean.class);
                     String path;
@@ -355,6 +360,12 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                         return;
                     }
                     int count = 0;
+                    String imagePath = mainLogoBean.getItemBgColor();
+                    Bitmap bitmapMain = FileUtil.getBitmapForFile(imagePath);
+                    File fileImage = FileUtil.fileForBitMap(path, bitmapMain, 100);
+                    RequestBody requestFileMain = RequestBody.create(MediaType.parse("image/png"), fileImage);
+                    MultipartBody.Part partMain = MultipartBody.Part.createFormData(URLEncoder.encode(fileImage.getName()), fileImage.getName(), requestFileMain);
+                    parts[0] = partMain;
                     for (LogoBean logoBean : editList) {
                         count++;
                         int logoType = logoBean.getType();
@@ -362,28 +373,14 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                             //图片
                             byte[] bytes = logoBean.getImage();
                             Bitmap bitmap = BitmapUtils.byteToBitmap(bytes);
-                            File file = new File(path + "/" + System.currentTimeMillis() + count + ".png");
-                            try {
-                                if (!file.exists() && !file.createNewFile()) {
-                                    continue;
-                                }
-                                FileOutputStream out = new FileOutputStream(file);
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                                out.flush();
-                                out.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            File file = FileUtil.fileForBitMap(path, bitmap, count);
                             RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
                             MultipartBody.Part part = MultipartBody.Part.createFormData(URLEncoder.encode(file.getName()), file.getName(), requestFile);
                             list.add(part);
                         }
                     }
-                    MultipartBody.Part[] parts = new MultipartBody.Part[list.size()-1];
-                    for (int i = 0; i < list.size() -1; i++) {
-                        parts[i] = list.get(i);
-                    }
-                    getPresenter().uploadLower(map,parts);
+
+                    getPresenter().uploadLower(map, parts);
                 });
                 // 编辑
                 pop_edit.setOnClickListener(view -> {
@@ -450,6 +447,46 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
         });
         recycle_picture.setAdapter(typeAdapter);
         refreshData();
+    }
+    @Override
+    public void uploadImage() {
+        //上传图片之后上传文字
+        //查询图片列表
+        String device_id = CommonUtils.getDevice_id();
+        JsonObject jsonObject;
+        jsonObject = produceReqArg.generateForJson(device_id);
+        jsonObject.addProperty("device_id", device_id);
+        jsonObject.addProperty("id", imageId);
+        JsonArray jsonArray = new JsonArray();
+        JsonObject jsonObjectData;
+        MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(imageId)).findFirst(MainLogoBean.class);
+        List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(2)).order("createtime desc").find(LogoBean.class);
+        for (LogoBean logoBean : editList) {
+            int logoType = logoBean.getType();
+            if (logoType == 2){
+                if (ObjectUtils.isNotEmpty(logoBean.getText())){
+                    jsonObjectData   = new JsonObject();
+                    jsonObjectData.addProperty("type",logoBean.getType());
+                    jsonObjectData.addProperty("textfontid",logoBean.getTextfontid());
+                    jsonObjectData.addProperty("layout_x",logoBean.getLeftRect());
+                    jsonObjectData.addProperty("layout_y",logoBean.getTopRect());
+                    jsonObjectData.addProperty("textsize",logoBean.getTextSize());
+                    jsonObjectData.addProperty("LineSpacing",logoBean.getLineSpacing());
+                    jsonObjectData.addProperty("TextColor",logoBean.getTextColor());
+                    jsonObjectData.addProperty("TextAlpha",logoBean.getTextAlpha());
+                    jsonObjectData.addProperty("text",logoBean.getText());
+                    jsonObjectData.addProperty("TextBold",logoBean.isTextBold());
+                    jsonObjectData.addProperty("TextEm",logoBean.isTextEm());
+                    jsonObjectData.addProperty("longitudinal",logoBean.isLongitudinal());
+                    //上传文字
+                    jsonArray.add(jsonObjectData);
+                }
+            }
+        }
+        jsonObject.add("content",jsonArray);
+        String obj = jsonObject.toString();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), obj);
+        getPresenter().uploadLowerInfo(body);
     }
 
     /**
@@ -773,6 +810,8 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
             edit_text.setTouchEnable(true);
         }
     }
+
+
 
     /**
      * @Author lixh

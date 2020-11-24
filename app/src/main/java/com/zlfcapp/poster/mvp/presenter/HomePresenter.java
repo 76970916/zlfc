@@ -12,6 +12,7 @@ import com.xinlan.imageeditlibrary.editimage.bean.LogoTemplate;
 import com.xinlan.imageeditlibrary.editimage.bean.TypeFace;
 import com.zlfcapp.poster.App;
 import com.xinlan.imageeditlibrary.editimage.bean.ImageResult;
+import com.xinlan.imageeditlibrary.editimage.bean.LowerListBean;
 import com.zlfcapp.poster.http.listener.HttpClientListener;
 import com.zlfcapp.poster.mvp.base.BasePresenter;
 import com.zlfcapp.poster.mvp.view.IHomeView;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by ZhangBx on 2018/7/25.
@@ -144,7 +146,6 @@ public class HomePresenter extends BasePresenter<IHomeView> {
                 List<LogoTemplate> list = gson.fromJson(array, type);
                 getView().queryAllTemplate(list);
             }
-
             @Override
             public void onError(int code, String message) {
                 getView().onError(code, message);
@@ -157,7 +158,42 @@ public class HomePresenter extends BasePresenter<IHomeView> {
         httpClient(getService().uploadLower(map,parts), new HttpClientListener<String>() {
             @Override
             public void onSuccess(String response) {
-                LogUtils.d("成功");
+                getView().uploadImage();
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                getView().onError(new Throwable());
+                LogUtils.d("失败-->" + message);
+            }
+        });
+    }
+    public void uploadLowerInfo( RequestBody body){
+        httpClient(getService().uploadLowerInfo(body), new HttpClientListener<String>() {
+            @Override
+            public void onSuccess(String response) {
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+            }
+        });
+    }
+    public void lowerList(Map<String,Object>map){
+        httpClient(getService().lowerList(map), new HttpClientListener<String>() {
+            @Override
+            public void onSuccess(String response) {
+                Gson gson = new GsonBuilder().create();
+                JsonArray contentArray = new JsonParser().parse(response).getAsJsonArray();
+                JsonObject jsonObjectContent  = (JsonObject) contentArray.get(0);
+                String imageUrl = String.valueOf(jsonObjectContent.get("url"));
+                String  l_id = String.valueOf(jsonObjectContent.get("l_id"));
+                JsonArray array = jsonObjectContent.getAsJsonArray("content");
+                Type type = new TypeToken<List<LowerListBean>>() {
+                }.getType();
+                List<LowerListBean> list = gson.fromJson(array, type);
+                getView().queryLowerList(list,imageUrl,Integer.parseInt(l_id));
             }
 
             @Override

@@ -19,5 +19,6 @@
         <mapping class="com.xinlan.imageeditlibrary.editimage.bean.ImageResult" />
         <!-- 主logo  -->
         <mapping class="com.xinlan.imageeditlibrary.editimage.bean.MainLogoBean" />
+        <mapping class="com.xinlan.imageeditlibrary.editimage.bean.LowerListBean" />
     </list>
 </litepal>
