@@ -206,7 +206,6 @@ public class StickerItem extends ImageViewTouch {
 
     public StickerItem(Context context) {
         super(context);
-
         helpBoxPaint.setColor(Color.BLACK);
         helpBoxPaint.setStyle(Style.STROKE);
         helpBoxPaint.setAntiAlias(true);

@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.bean.ImageResult;
+import com.xinlan.imageeditlibrary.editimage.bean.LogoBean;
 import com.xinlan.imageeditlibrary.editimage.bean.LogoTemplate;
 import com.xinlan.imageeditlibrary.editimage.bean.LowerListBean;
 import com.xinlan.imageeditlibrary.editimage.bean.TypeFace;
@@ -104,16 +105,27 @@ public class FestivalFragment extends BaseFragment<IHomeView, HomePresenter> imp
     }
 
     @Override
-    public void queryLowerList(List<LowerListBean> list,String imageUrl,int l_id) {
+    public void queryLowerList(List<LowerListBean> list, String imageUrl, int l_id) {
         if (list != null) {
-            LitePal.deleteAll(LowerListBean.class, "l_id=?", String.valueOf(list.get(0).getL_id()));
+            LitePal.deleteAll(LogoBean.class, "fid=?", String.valueOf(l_id));
         }
         for (LowerListBean bean : list) {
-            bean.save();
+            LogoBean logoBean = new LogoBean();
+            logoBean.setFid(l_id);
+            logoBean.setLeftRect(bean.getLayout_x());
+            logoBean.setTopRect(bean.getLayout_y());
+            logoBean.setType(bean.getType());
+            logoBean.setmAlpha(255);
+            logoBean.setText(bean.getText());
+            logoBean.setTextColor(bean.getTextColor());
+            logoBean.setTextSize(bean.getTextsize());
+            logoBean.setTextfontid(bean.getTextfontid());
+            boolean save = logoBean.save();
+            Log.d("LogoBeansave", String.valueOf(save));
         }
         if (list != null) {
             Intent intent = new Intent(getActivity(), EditImageActivity.class);
-            intent.putExtra(Constants.POSTER_ID,l_id);
+            intent.putExtra(Constants.POSTER_ID, l_id);
             intent.putExtra("imageUrl", imageUrl);
             startActivity(intent);
         }

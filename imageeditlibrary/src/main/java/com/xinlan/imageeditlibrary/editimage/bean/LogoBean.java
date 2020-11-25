@@ -35,7 +35,6 @@ public class LogoBean extends LitePalSupport {
     private boolean textBold;
     private boolean textEm;
     private float lineSpacing;
-
     private String bgcolor;
     private int tabWith;
     private int tabHeight;
@@ -44,7 +43,6 @@ public class LogoBean extends LitePalSupport {
     private int topRect;
     private int rightRect;
     private int bottomRect;
-
     //    绘制目标坐标
     private float leftRectF;
     private float topRectF;

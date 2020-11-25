@@ -304,7 +304,6 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
 
     @Override
     public void initData() {
-
         listLogos = LitePal.where("online = 1").order("createtime desc").find(MainLogoBean.class);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         recycle_picture.setLayoutManager(layoutManager);
@@ -348,8 +347,8 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                     String device_id = CommonUtils.getDevice_id();
                     Map<String, Object> map = produceReqArg.generateObj(device_id);
                     map.put("device_id", device_id);
-                    map.put("id", 1);
-                    imageId = 1;
+                    map.put("id", 2);
+                    imageId = item.getId();
                     MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(item.getId())).findFirst(MainLogoBean.class);
                     List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(item.getId())).order("createtime desc").find(LogoBean.class);
                     String path;
@@ -379,7 +378,6 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                             list.add(part);
                         }
                     }
-
                     getPresenter().uploadLower(map, parts);
                 });
                 // 编辑
@@ -456,11 +454,11 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
         JsonObject jsonObject;
         jsonObject = produceReqArg.generateForJson(device_id);
         jsonObject.addProperty("device_id", device_id);
-        jsonObject.addProperty("id", imageId);
+        jsonObject.addProperty("id", 2);
         JsonArray jsonArray = new JsonArray();
         JsonObject jsonObjectData;
         MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(imageId)).findFirst(MainLogoBean.class);
-        List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(2)).order("createtime desc").find(LogoBean.class);
+        List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(imageId)).order("createtime desc").find(LogoBean.class);
         for (LogoBean logoBean : editList) {
             int logoType = logoBean.getType();
             if (logoType == 2){
@@ -478,6 +476,10 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                     jsonObjectData.addProperty("TextBold",logoBean.isTextBold());
                     jsonObjectData.addProperty("TextEm",logoBean.isTextEm());
                     jsonObjectData.addProperty("longitudinal",logoBean.isLongitudinal());
+                    jsonObjectData.addProperty("tabWith",logoBean.getTabWith());
+                    jsonObjectData.addProperty("tabHeight",logoBean.getTabHeight());
+                    jsonObjectData.addProperty("percentHeight",logoBean.getPercentHeight());
+                    jsonObjectData.addProperty("percentWith",logoBean.getPercentWith());
                     //上传文字
                     jsonArray.add(jsonObjectData);
                 }
@@ -545,7 +547,7 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                 } else {
                     mBitmap = BitmapUtils.zoomBitmap(bitmap, stickerItem.dstRect.width() * 0.38f, stickerItem.dstRect.height() * 0.38f);
                 }
-                item_logo.addBitImage(mBitmap, 101, stickerItem, stickerItem.percentHeight, stickerItem.percentWith);
+                item_logo.addBitImage(mBitmap, 101, stickerItem, logoBean.getPercentHeight(), logoBean.getPercentWith());
                 // 清除所有边框
                 item_logo.deleteFrame();
             } else if (logoType == 2) {

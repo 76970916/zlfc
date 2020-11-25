@@ -351,7 +351,7 @@ public class EditImageActivity extends BaseActivity {
         String fontName = null;
         String fontUrl = null;
         Intent intent = getIntent();
-        int l_id = intent.getIntExtra(Constants.LOGO_ID, 0);
+        int l_id = intent.getIntExtra(Constants.POSTER_ID, 0);
         if (l_id != 0) {
             imageUrl = intent.getStringExtra("imageUrl");
             imageUrl = imageUrl.substring(1, imageUrl.length() - 1);
@@ -538,14 +538,14 @@ public class EditImageActivity extends BaseActivity {
     }
 
     private void initPosterData(int l_id) {
-        List<LowerListBean> editList = LitePal.where("l_id = ?", String.valueOf(l_id)).order("createtime desc").find(LowerListBean.class);
+        List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(l_id)).order("createtime desc").find(LogoBean.class);
         imageSpace.setVisibility(View.VISIBLE);
         Glide.with(EditImageActivity.this).load(imageUrl).into(imageSpace);
-        for (LowerListBean lowerListBean : editList) {
-            if (lowerListBean.getType() == 1) {
-                if (ObjectUtils.isNotEmpty(lowerListBean.getText())) {
+        for (LogoBean logoBean : editList) {
+            if (logoBean.getType() == 2) {
+                if (ObjectUtils.isNotEmpty(logoBean.getText())) {
                     //文字
-                    createTextStickView(lowerListBean);
+                    createTextStickView(logoBean);
                 }
             }
         }
@@ -972,7 +972,6 @@ public class EditImageActivity extends BaseActivity {
                         mainImage.setVisibMapPosition(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }
-
                 });
             }
         };
@@ -981,7 +980,6 @@ public class EditImageActivity extends BaseActivity {
         itemTouchHelper.attachToRecyclerView(recyclerImage);
         itemTouchHelperCallback.setCallBackListener(new RecyItemTouchHelperCallback.OnCallBack() {
             @Override
-
             public void callBackData(LinkedHashMap<Integer, StickerItem> bank, int fromPosition, int toPosition) {
                 mainImage.setStickerItem(bank, fromPosition, toPosition);
             }
@@ -1264,14 +1262,14 @@ public class EditImageActivity extends BaseActivity {
             }
             DisplayMetrics metrics;
             metrics = getResources().getDisplayMetrics();
-            mainImage.addText(null, metrics.heightPixels, metrics.widthPixels);
+            mainImage.addText(null, tabHeight, tabWith);
             StickerItem stickerItem = mainImage.getItem();
             stickerItem.setSiteX(logoBean.getLeftRect());
             stickerItem.setSiteY(logoBean.getTopRect());
             stickerItem.itemType = ConstantLogo.TEXT;
             stickerItem.setShowHelpBox(false);
             String name = logoBean.getText();
-            int alpha = logoBean.getTextAlpha();
+            int alpha = 255;
             int color = logoBean.getTextColor();
             float textSize = logoBean.getTextSize();
             if (!clear) {
@@ -1394,17 +1392,23 @@ public class EditImageActivity extends BaseActivity {
     }
 
     private void setCancasBg() {
-        if (tabHeight != 0 && tabWith != 0) {
+        if (tabHeight == 0) {
+            tabWith = (int) (metrics.widthPixels * 0.8);
+            tabHeight = (int) (tabWith * 1.9);
+            percentHeight = (int) (((float) tabHeight / (float) metrics.heightPixels) * 100);
+            percentWith = (int) (((float) tabWith / (float) metrics.widthPixels) * 100);
+        }
+
             FrameLayout.LayoutParams params_imageSpace = (FrameLayout.LayoutParams) imageSpace.getLayoutParams();
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tableView.getLayoutParams();
             if (largerCode == 1) {
                 params.height = metrics.widthPixels;
-                params_imageSpace.height = metrics.widthPixels;
+//                params_imageSpace.height = metrics.widthPixels;
             } else if (largerCode == 2) {
                 //1080*1920
             } else {
                 params.height = tabHeight;
-                params_imageSpace.height = tabHeight;
+//                params_imageSpace.height = tabHeight;
             }
             params.width = tabWith;
             params.gravity = Gravity.CENTER;
@@ -1413,7 +1417,6 @@ public class EditImageActivity extends BaseActivity {
             params_imageSpace.gravity = Gravity.CENTER;
             imageSpace.setLayoutParams(params_imageSpace);
             setWhiteBg();
-        }
     }
 
     private void setWhiteBg() {
@@ -1501,10 +1504,12 @@ public class EditImageActivity extends BaseActivity {
             ((ViewGroup) image.getParent()).removeView(image);
         }
         frame_space.addView(image);
-        if (item.getItemBgColor().startsWith("http") || FileUtils.isFile(item.getItemBgColor())) {
-            Glide.with(activity).load(item.getItemBgColor()).into(image);
-        } else {
-            image.setBackgroundColor(Integer.parseInt(item.getItemBgColor()));
+        if (item.getItemBgColor() != null) {
+            if (item.getItemBgColor().startsWith("http") || FileUtils.isFile(item.getItemBgColor())) {
+                Glide.with(activity).load(item.getItemBgColor()).into(image);
+            } else {
+                image.setBackgroundColor(Integer.parseInt(item.getItemBgColor()));
+            }
         }
         for (int i = 0; i < editList.size(); i++) {
             LogoBean logoBean = editList.get(i);
@@ -1813,6 +1818,10 @@ public class EditImageActivity extends BaseActivity {
                 logoBean.setTopRect(items.layout_y);
                 logoBean.setLineSpacing(items.getLineSpacing());
                 logoBean.setLongitudinal(items.longitudinal);
+                logoBean.setTabHeight(tabHeight);
+                logoBean.setTabWith(tabWith);
+                logoBean.setPercentHeight(percentHeight);
+                logoBean.setPercentWith(percentWith);
                 if (items.getTextBold()) {
                     logoBean.setTextBold(items.getTextBold());
                 } else {
@@ -1847,6 +1856,10 @@ public class EditImageActivity extends BaseActivity {
                 logoBean.setRightRectF(items.dstRect.right);
                 logoBean.setmAlpha(items.getmAlpha());
                 logoBean.setBottomRectF(items.dstRect.bottom);
+                logoBean.setTabHeight(tabHeight);
+                logoBean.setTabWith(tabWith);
+                logoBean.setPercentHeight(percentHeight);
+                logoBean.setPercentWith(percentWith);
                 if (ObjectUtils.isNotEmpty(items.getSvgContent())) {
                     logoBean.setSvgContent(items.getSvgContent());
                 }

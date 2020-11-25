@@ -91,7 +91,6 @@ public class CanvasLargerActivity extends BaseActivity {
         relativeCanvas.setLayoutParams(params);
         querenBtn.setOnClickListener(v -> {
             startEdit();
-
         });
         backBtn.setOnClickListener(v -> {
             finish();
@@ -129,19 +128,6 @@ public class CanvasLargerActivity extends BaseActivity {
         if (data.getType() == ConstantLogo.SELECT_VIEW) {
             switch (data.getPosition()) {
                 case 1:
-                    //1080x1080
-                    imageWith = metrics.widthPixels;
-                    imageHeight = metrics.heightPixels;
-                    params.width = (int) (metrics.widthPixels * 0.7);
-                    params.height = (int) (metrics.widthPixels * 0.7);
-                    relativeCanvas.setLayoutParams(params);
-                    textPixel.setText("1080x1080像素");
-                    code = 1;
-                    percentHeight = 100;
-                    percentWith = 100;
-                    position = 1;
-                    break;
-                case 2:
                     //1080x1920
                     code = 2;
                     imageWith = (int) (metrics.widthPixels * 0.8);
@@ -154,6 +140,19 @@ public class CanvasLargerActivity extends BaseActivity {
                     percentWith = (int) (((float) imageWith / (float) maxWith) * 100);
                     code = 0;
                     position = 2;
+                    break;
+                case 2:
+                    //1080x1080
+                    imageWith = metrics.widthPixels;
+                    imageHeight = metrics.heightPixels;
+                    params.width = (int) (metrics.widthPixels * 0.7);
+                    params.height = (int) (metrics.widthPixels * 0.7);
+                    relativeCanvas.setLayoutParams(params);
+                    textPixel.setText("1080x1080像素");
+                    code = 1;
+                    percentHeight = 100;
+                    percentWith = 100;
+                    position = 1;
                     break;
                 case 3:
                     //500x500
