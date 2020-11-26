@@ -26,6 +26,8 @@ public class LogoBean extends LitePalSupport {
     private Date updatetime;
     private float bitmapWidth;
     private float bitmapHeight;
+    private float mRotateAngle;
+    private float mScale;
     //   文字 、文字颜色、文字字体 关联、大小、透明度
     private String text;
     private int textColor;
@@ -60,13 +62,29 @@ public class LogoBean extends LitePalSupport {
     // 1 是本地数据可修改
     private int online;
 
-    boolean longitudinal; //判断是横排还是竖排
+    int  longitudinal; //判断是横排还是竖排
 
-    public boolean isLongitudinal() {
+    public float getmRotateAngle() {
+        return mRotateAngle;
+    }
+
+    public void setmRotateAngle(float mRotateAngle) {
+        this.mRotateAngle = mRotateAngle;
+    }
+
+    public float getmScale() {
+        return mScale;
+    }
+
+    public void setmScale(float mScale) {
+        this.mScale = mScale;
+    }
+
+    public int getLongitudinal() {
         return longitudinal;
     }
 
-    public void setLongitudinal(boolean longitudinal) {
+    public void setLongitudinal(int longitudinal) {
         this.longitudinal = longitudinal;
     }
 

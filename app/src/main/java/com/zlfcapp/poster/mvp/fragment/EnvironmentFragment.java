@@ -32,9 +32,6 @@ public class EnvironmentFragment extends BaseFragment<IHomeView, HomePresenter> 
     @BindView(R.id.recycler_viewpager)
     RecyclerView recyclerViewpager;
     BaseQuickAdapter adapter;
-    String type = "节日";
-    String getTypename;
-    Dialog tipDialog;
     List<ImageResult> mainList = new ArrayList<>();
     @Override
     public int getRootViewId() {
@@ -64,9 +61,6 @@ public class EnvironmentFragment extends BaseFragment<IHomeView, HomePresenter> 
 
     private void initRecycler() {
         GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
-//        recyclerViewpager = rootView.findViewById(R.id.recycler_viewpager);
-//        text_tab = rootView.findViewById(R.id.text_tab);
-//        text_tab.setText(type);
         recyclerViewpager.setLayoutManager(manager);
         adapter = new BaseQuickAdapter<ImageResult, BaseViewHolder>(R.layout.list_simple_temp, mainList) {
             @Override
@@ -77,7 +71,11 @@ public class EnvironmentFragment extends BaseFragment<IHomeView, HomePresenter> 
                     Glide.with(getActivity()).load(item.getUrl()).into(item_logo);
                 }
                 item_logo.setOnClickListener(v -> {
-                    Log.d("imageId", String.valueOf(item.getId()));
+                    String device_id = CommonUtils.getDevice_id();
+                    Map<String, Object> map = produceReqArg.generateObj(device_id);
+                    map.put("device_id", device_id);
+                    map.put("id", item.getId());
+                    getPresenter().lowerList(map);
                 });
             }
         };

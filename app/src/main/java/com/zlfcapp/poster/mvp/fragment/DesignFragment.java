@@ -347,7 +347,7 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                     String device_id = CommonUtils.getDevice_id();
                     Map<String, Object> map = produceReqArg.generateObj(device_id);
                     map.put("device_id", device_id);
-                    map.put("id", 2);
+                    map.put("id", 7);
                     imageId = item.getId();
                     MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(item.getId())).findFirst(MainLogoBean.class);
                     List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(item.getId())).order("createtime desc").find(LogoBean.class);
@@ -451,10 +451,9 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
         //上传图片之后上传文字
         //查询图片列表
         String device_id = CommonUtils.getDevice_id();
-        JsonObject jsonObject;
-        jsonObject = produceReqArg.generateForJson(device_id);
+        JsonObject jsonObject = produceReqArg.generateForJson(device_id);
         jsonObject.addProperty("device_id", device_id);
-        jsonObject.addProperty("id", 2);
+        jsonObject.addProperty("id", 39);
         JsonArray jsonArray = new JsonArray();
         JsonObject jsonObjectData;
         MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(imageId)).findFirst(MainLogoBean.class);
@@ -475,11 +474,13 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
                     jsonObjectData.addProperty("text",logoBean.getText());
                     jsonObjectData.addProperty("TextBold",logoBean.isTextBold());
                     jsonObjectData.addProperty("TextEm",logoBean.isTextEm());
-                    jsonObjectData.addProperty("longitudinal",logoBean.isLongitudinal());
+                    jsonObjectData.addProperty("longitudinal",logoBean.getLongitudinal());
                     jsonObjectData.addProperty("tabWith",logoBean.getTabWith());
                     jsonObjectData.addProperty("tabHeight",logoBean.getTabHeight());
                     jsonObjectData.addProperty("percentHeight",logoBean.getPercentHeight());
                     jsonObjectData.addProperty("percentWith",logoBean.getPercentWith());
+                    jsonObjectData.addProperty("mRotateAngle",logoBean.getmRotateAngle());
+                    jsonObjectData.addProperty("mScale",logoBean.getmScale());
                     //上传文字
                     jsonArray.add(jsonObjectData);
                 }

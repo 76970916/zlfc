@@ -457,7 +457,7 @@ public class AddTextFragment extends BaseEditFragment {
                         // 自定义颜色弹窗
                         ColorSelectDialog colorPickerDialog = new ColorSelectDialog(getActivity(), getResources().getColor(R.color.white), "颜色自定义");
                         colorPickerDialog.setAlphaSliderVisible(true);
-                        colorPickerDialog.setHexValueEnabled(true);
+//                        colorPickerDialog.setHexValueEnabled(true);
                         colorPickerDialog.setOnColorListener((int color) -> {
                             activity.mainImage.setTextColor(mTextView, color);
                             activity.isExit = true;

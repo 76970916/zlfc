@@ -11,15 +11,71 @@ public class LowerListBean extends LitePalSupport {
     int layout_x;
     int layout_y;
     int textsize;
-    int LineSpacing;
+    float LineSpacing;
     int TextColor;
     int TextAlpha;
     String text;
     boolean TextBold;
     boolean TextEm;
-    boolean longitudinal;
+    int  longitudinal;
     int textfontid;
     int type;
+    int percentHeight;
+    int percentWith;
+    int tabWith;
+    int tabHeight;
+    float mRotateAngle;
+    float mScale;
+
+    public float getmRotateAngle() {
+        return mRotateAngle;
+    }
+
+    public void setmRotateAngle(float mRotateAngle) {
+        this.mRotateAngle = mRotateAngle;
+    }
+
+    public float getmScale() {
+        return mScale;
+    }
+
+    public void setmScale(float mScale) {
+        this.mScale = mScale;
+    }
+
+    public int getPercentHeight() {
+        return percentHeight;
+    }
+
+    public void setPercentHeight(int percentHeight) {
+        this.percentHeight = percentHeight;
+    }
+
+    public int getPercentWith() {
+        return percentWith;
+    }
+
+    public void setPercentWith(int percentWith) {
+        this.percentWith = percentWith;
+    }
+
+    public int getTabWith() {
+        return tabWith;
+    }
+
+    public void setTabWith(int tabWith) {
+        this.tabWith = tabWith;
+    }
+
+    public int getTabHeight() {
+        return tabHeight;
+    }
+
+    public void setTabHeight(int tabHeight) {
+        this.tabHeight = tabHeight;
+    }
+
+
 
     public int getId() {
         return id;
@@ -85,8 +141,12 @@ public class LowerListBean extends LitePalSupport {
         this.textsize = textsize;
     }
 
-    public int getLineSpacing() {
+    public float getLineSpacing() {
         return LineSpacing;
+    }
+
+    public void setLineSpacing(float lineSpacing) {
+        LineSpacing = lineSpacing;
     }
 
     public void setLineSpacing(int lineSpacing) {
@@ -133,11 +193,11 @@ public class LowerListBean extends LitePalSupport {
         TextEm = textEm;
     }
 
-    public boolean isLongitudinal() {
+    public int getLongitudinal() {
         return longitudinal;
     }
 
-    public void setLongitudinal(boolean longitudinal) {
+    public void setLongitudinal(int longitudinal) {
         this.longitudinal = longitudinal;
     }
 

@@ -435,7 +435,43 @@ public class StickerItem extends ImageViewTouch {
         this.helpBox.top -= HELP_BOX_PAD;
         this.helpBox.bottom += HELP_BOX_PAD;
     }
+    public void updateTextRotateAndScale(final float dx, final float dy, float moveX, float moveY) {
+        float c_x = mHelpBoxRect.centerX();
+        float c_y = mHelpBoxRect.centerY();
 
+        float x = detectRotateRect.centerX();
+        float y = detectRotateRect.centerY();
+
+        float n_x = x + dx;
+        float n_y = y + dy;
+
+        float xa = x - c_x;
+        float ya = y - c_y;
+
+        float xb = n_x - c_x;
+        float yb = n_y - c_y;
+
+        float srcLen = (float) Math.sqrt(xa * xa + ya * ya);
+        float curLen = (float) Math.sqrt(xb * xb + yb * yb);
+
+        float scale = curLen / srcLen;// 计算缩放比
+
+        mScale *= scale;
+        float newWidth = mHelpBoxRect.width() * mScale;
+        if (newWidth < 70) {
+            mScale /= scale;
+            return;
+        }
+        double cos = (xa * xb + ya * yb) / (srcLen * curLen);
+        if (cos > 1 || cos < -1)
+            return;
+        float angle = (float) Math.toDegrees(Math.acos(cos));
+        float calMatrix = xa * yb - xb * ya;// 行列式计算 确定转动方向
+
+        int flag = calMatrix > 0 ? 1 : -1;
+        angle = flag * angle;
+        mRotateAngle += angle;
+    }
 
     /**
      * 位置更新
@@ -597,10 +633,10 @@ public class StickerItem extends ImageViewTouch {
     private void initView(Context context, Typeface type) {
         debugPaint.setColor(Color.parseColor("#66ff0000"));
         mDeleteBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sticker_delete);
-//        mRotateBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sticker_rotate);
+        mRotateBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sticker_rotate);
 //        new Double(logoBean.getLeftRect() * 0.38).intValue(), new Double(logoBean.getTopRect() * 0.47).intValue(),
         mDeleteRect.set(0, 0, mDeleteBitmap.getWidth(), mDeleteBitmap.getHeight());
-//        mRotateRect.set(0, 0, mRotateBitmap.getWidth(), mDeleteBitmap.getHeight());
+        mRotateRect.set(0, 0, mRotateBitmap.getWidth(), mRotateBitmap.getHeight());
         detectDeleteRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1, STICKER_BTN_HALF_SIZE << 1);
         detectRotateRect = new RectF(0, 0, STICKER_BTN_HALF_SIZE << 1, STICKER_BTN_HALF_SIZE << 1);
         mPaint.setColor(Color.BLACK);
@@ -738,7 +774,7 @@ public class StickerItem extends ImageViewTouch {
         canvas.drawRoundRect(mHelpBoxRect, 10, 10, mHelpPaint);
         canvas.restore();
         canvas.drawBitmap(mDeleteBitmap, mDeleteRect, detectDeleteRect, null);
-//        canvas.drawBitmap(mRotateBitmap, mRotateRect, mRotateDstRect, null);
+        canvas.drawBitmap(mRotateBitmap, mRotateRect, detectRotateRect, null);
         //canvas.drawRect(mRotateDstRect, debugPaint);
         //canvas.drawRect(mDeleteDstRect, debugPaint);
     }
@@ -832,8 +868,6 @@ public class StickerItem extends ImageViewTouch {
             layout_x = phoneWith / 2;
             layout_y = phoneHeight / 3;
         }
-        mRotateAngle = 0;
-        mScale = 1;
     }
 
     public boolean isShowHelpBox() {

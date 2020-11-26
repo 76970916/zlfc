@@ -117,6 +117,13 @@ public class FestivalFragment extends BaseFragment<IHomeView, HomePresenter> imp
             logoBean.setType(bean.getType());
             logoBean.setmAlpha(255);
             logoBean.setText(bean.getText());
+            logoBean.setmRotateAngle(bean.getmRotateAngle());
+            logoBean.setmScale(bean.getmScale());
+            logoBean.setLongitudinal(bean.getLongitudinal());
+            logoBean.setPercentWith(bean.getPercentWith());
+            logoBean.setPercentHeight(bean.getPercentHeight());
+            logoBean.setTabWith(bean.getTabWith());
+            logoBean.setTabHeight(bean.getTabHeight());
             logoBean.setTextColor(bean.getTextColor());
             logoBean.setTextSize(bean.getTextsize());
             logoBean.setTextfontid(bean.getTextfontid());

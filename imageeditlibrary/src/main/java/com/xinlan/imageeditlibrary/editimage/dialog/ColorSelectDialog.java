@@ -5,8 +5,10 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +98,6 @@ public class ColorSelectDialog extends AppCompatDialog implements ColorPickerVie
     private void setUp(int color) {
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         mLayout = inflater.inflate(R.layout.dialog_color_picker, null);
         mLayout.getViewTreeObserver().addOnGlobalLayoutListener(this);
         image_cancel = mLayout.findViewById(R.id.image_cancel);
@@ -113,7 +114,28 @@ public class ColorSelectDialog extends AppCompatDialog implements ColorPickerVie
         mHexVal = (EditText) mLayout.findViewById(R.id.hex_val);
         mHexVal.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mHexDefaultTextColor = mHexVal.getTextColors();
+        mHexVal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s != null) {
+                    if (s.length() > 5 || s.length() < 10) {
+//                        int c = ColorPickerPreference.convertToColorInt(s.toString());
+//                        mColorPicker.setColor(c, true);
+//                        mHexVal.setText(s);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         mHexVal.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override

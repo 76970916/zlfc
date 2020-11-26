@@ -60,7 +60,7 @@ public class TextStickerView extends View {
     private float last_x = 0;
     private float last_y = 0;
 
-    public float mRotateAngle = 0;
+    public float mRotateAngle;
     public float mScale = 1;
     private boolean isInitLayout = true;
 
@@ -487,7 +487,6 @@ public class TextStickerView extends View {
 
         int flag = calMatrix > 0 ? 1 : -1;
         angle = flag * angle;
-
         mRotateAngle += angle;
     }
 
@@ -499,8 +498,6 @@ public class TextStickerView extends View {
             layout_x = getMeasuredWidth() / 2;
             layout_y = getMeasuredHeight() / 3;
         }
-        mRotateAngle = 0;
-        mScale = 1;
     }
 
     public boolean isShowHelpBox() {

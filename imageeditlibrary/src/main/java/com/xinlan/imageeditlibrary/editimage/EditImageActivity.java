@@ -355,9 +355,9 @@ public class EditImageActivity extends BaseActivity {
         if (l_id != 0) {
             imageUrl = intent.getStringExtra("imageUrl");
             imageUrl = imageUrl.substring(1, imageUrl.length() - 1);
-            List<LowerListBean> editList = LitePal.where("l_id = ?", String.valueOf(l_id)).find(LowerListBean.class);
+            List<LogoBean> editList = LitePal.where("fid = ?", String.valueOf(l_id)).find(LogoBean.class);
             if (!editList.isEmpty()) {
-                for (LowerListBean item : editList) {
+                for (LogoBean item : editList) {
                     TypeFace typeFace = LitePal.where("onlineid = ?", String.valueOf(item.getTextfontid())).findFirst(TypeFace.class);
                     if (ObjectUtils.isNotEmpty(typeFace)) {
                         if (ObjectUtils.isEmpty(typeFace.getLocalpath())) {
@@ -683,6 +683,10 @@ public class EditImageActivity extends BaseActivity {
                                 putBitmap(photo.path);
                             }
                         });
+                        break;
+                    case 5:
+                        MainLogoBean item = (MainLogoBean) msg.obj;
+                        exportImage(item, frame_export);
                         break;
                 }
             }
@@ -1266,6 +1270,13 @@ public class EditImageActivity extends BaseActivity {
             StickerItem stickerItem = mainImage.getItem();
             stickerItem.setSiteX(logoBean.getLeftRect());
             stickerItem.setSiteY(logoBean.getTopRect());
+            stickerItem.mRotateAngle = logoBean.getmRotateAngle();
+            if (logoBean.getmScale() == 0) {
+                stickerItem.mScale = 1;
+            } else {
+                stickerItem.mScale = logoBean.getmScale();
+            }
+
             stickerItem.itemType = ConstantLogo.TEXT;
             stickerItem.setShowHelpBox(false);
             String name = logoBean.getText();
@@ -1287,6 +1298,9 @@ public class EditImageActivity extends BaseActivity {
             stickerItem.setmAlpha(alpha);
             stickerItem.resetView();
             stickerItem.setTextType(tf);
+            if (logoBean.getLongitudinal() == 1) {
+                stickerItem.longitudinal = true;
+            }
             mainImage.setTextStickerContent(stickerItem, name);
             setImageData();
             mainImage.setOnEditClickListener(v -> {
@@ -1328,7 +1342,6 @@ public class EditImageActivity extends BaseActivity {
         metrics = getResources().getDisplayMetrics();
         imageWidth = metrics.widthPixels / 5;
         imageHeight = metrics.heightPixels / 4;
-
         mAddTextFragment = AddTextFragment.newInstance();
         DisplayMetrics outMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
@@ -1456,14 +1469,6 @@ public class EditImageActivity extends BaseActivity {
         }
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            MainLogoBean item = (MainLogoBean) msg.obj;
-            exportImage(item, frame_export);
-        }
-    };
 
     public void saveClick() {
         backBtn.setOnClickListener(v -> {
@@ -1475,10 +1480,10 @@ public class EditImageActivity extends BaseActivity {
                 item.setId(key);
             }
             Message msg = new Message();
-            msg.what = 1;
+            msg.what = 5;
             item.exit = true;
             msg.obj = item;
-            handler.sendMessageDelayed(msg, 300);
+            mHandler.sendMessageDelayed(msg, 300);
             initStickerView(item, sticker_export, frame_export);
         });
     }
@@ -1686,6 +1691,8 @@ public class EditImageActivity extends BaseActivity {
                 edit_text.setTextSize(textSize * 0.38f);
             }
             edit_text.setTextColor(color);
+            edit_text.mRotateAngle = logoBean.getmRotateAngle();
+            edit_text.mScale = logoBean.getmScale();
             edit_text.setmAlpha(alpha);
             edit_text.setText(name);
             edit_text.setTextBold(logoBean.isTextBold());
@@ -1791,6 +1798,7 @@ public class EditImageActivity extends BaseActivity {
         } else {
             mainLogoBean.update(key);
         }
+        LitePal.deleteAll(LogoBean.class, "fid=?", String.valueOf(key));
         for (int keymap : hashMap.keySet()) {
             StickerItem items = hashMap.get(keymap);
             LogoBean logoBean = new LogoBean();
@@ -1817,11 +1825,17 @@ public class EditImageActivity extends BaseActivity {
                 logoBean.setLeftRect(items.layout_x);
                 logoBean.setTopRect(items.layout_y);
                 logoBean.setLineSpacing(items.getLineSpacing());
-                logoBean.setLongitudinal(items.longitudinal);
+                if (items.longitudinal) {
+                    logoBean.setLongitudinal(1);
+                } else {
+                    logoBean.setLongitudinal(0);
+                }
                 logoBean.setTabHeight(tabHeight);
                 logoBean.setTabWith(tabWith);
                 logoBean.setPercentHeight(percentHeight);
                 logoBean.setPercentWith(percentWith);
+                logoBean.setmRotateAngle(items.mRotateAngle);
+                logoBean.setmScale(items.mScale);
                 if (items.getTextBold()) {
                     logoBean.setTextBold(items.getTextBold());
                 } else {
@@ -1860,6 +1874,8 @@ public class EditImageActivity extends BaseActivity {
                 logoBean.setTabWith(tabWith);
                 logoBean.setPercentHeight(percentHeight);
                 logoBean.setPercentWith(percentWith);
+                logoBean.setmRotateAngle(items.mRotateAngle);
+                logoBean.setmScale(items.mScale);
                 if (ObjectUtils.isNotEmpty(items.getSvgContent())) {
                     logoBean.setSvgContent(items.getSvgContent());
                 }
@@ -2135,10 +2151,10 @@ public class EditImageActivity extends BaseActivity {
                             item.setId(key);
                         }
                         Message msg = new Message();
-                        msg.what = 1;
+                        msg.what = 5;
                         item.exit = false;
                         msg.obj = item;
-                        handler.sendMessageDelayed(msg, 300);
+                        mHandler.sendMessageDelayed(msg, 300);
                         initStickerView(item, sticker_export, frame_export);
                         activity.finish();
                     }

@@ -690,19 +690,21 @@ public class StickerView extends ImageViewTouch {
                     break;
                 }
                 ret = true;
-                if (currentItem.itemType == ConstantLogo.TEXT) {
-                    if (moveType == 1) {// 移动贴图
-                        if (currentStatus == STATUS_MOVE) {
-                            float dx = x - oldx;
-                            float dy = y - oldy;
-                            if (currentItem != null) {
+                if (moveType == 1) {// 移动贴图
+                    if (currentStatus == STATUS_MOVE) {
+                        float dx = x - oldx;
+                        float dy = y - oldy;
+                        if (currentItem != null) {
+                            if (currentItem.itemType == ConstantLogo.TEXT) {
                                 currentItem.updateText(dx, dy);
-                                invalidate();
-                            }// end if
-                            oldx = x;
-                            oldy = y;
-                        }
+                            } else {
+                                currentItem.updatePos(dx, dy);
+                            }
 
+                            invalidate();
+                        }// end if
+                        oldx = x;
+                        oldy = y;
                     }
                 } else {
                     if (moveType == 2) {
@@ -737,37 +739,30 @@ public class StickerView extends ImageViewTouch {
                         float dx = x - oldx;
                         float dy = y - oldy;
                         if (currentItem != null) {
-                            currentItem.setRangle(scale, rotation);
+                            if (currentItem.itemType != ConstantLogo.TEXT) {
+                                currentItem.setRangle(scale, rotation);
+                            }
                             invalidate();
                         }
                         oldx = x;
                         oldy = y;
                     } else {
-                        if (moveType == 1) {// 移动贴图
-                            if (currentStatus == STATUS_MOVE) {
-                                float dx = x - oldx;
-                                float dy = y - oldy;
-                                if (currentItem != null) {
-                                    currentItem.updatePos(dx, dy);
-                                    invalidate();
-                                }// end if
-                                oldx = x;
-                                oldy = y;
-                            }
-
-                        } else if (currentStatus == STATUS_ROTATE) {// 旋转 缩放图片操作
+                        if (currentStatus == STATUS_ROTATE) {// 旋转 缩放图片操作
                             // System.out.println("旋转");
                             float dx = x - oldx;
                             float dy = y - oldy;
                             if (currentItem != null) {
-                                currentItem.updateRotateAndScale(oldx, oldy, dx, dy);// 旋转
+                                if (currentItem.itemType == ConstantLogo.TEXT) {
+                                    currentItem.updateTextRotateAndScale (dx,dy,x,y);
+                                } else {
+                                    currentItem.updateRotateAndScale(oldx, oldy, dx, dy);// 旋转
+                                }
                                 invalidate();
                             }// end if
                             oldx = x;
                             oldy = y;
                         }
                     }
-
                 }
                 clickListener.getTouchEvent();
                 break;
