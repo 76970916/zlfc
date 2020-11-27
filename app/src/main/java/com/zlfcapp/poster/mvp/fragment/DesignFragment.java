@@ -453,7 +453,7 @@ public class DesignFragment extends BaseFragment<IHomeView, HomePresenter> imple
         String device_id = CommonUtils.getDevice_id();
         JsonObject jsonObject = produceReqArg.generateForJson(device_id);
         jsonObject.addProperty("device_id", device_id);
-        jsonObject.addProperty("id", 39);
+        jsonObject.addProperty("id", 49);
         JsonArray jsonArray = new JsonArray();
         JsonObject jsonObjectData;
         MainLogoBean mainLogoBean = LitePal.where("id = ?", String.valueOf(imageId)).findFirst(MainLogoBean.class);
